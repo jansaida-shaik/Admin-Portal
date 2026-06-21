@@ -1181,12 +1181,26 @@ app.put('/api/placements/:id', authenticate, asyncHandler(async (req, res) => {
   });
   res.json(order);
 }));
-const server = app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
+let server;
+if (!process.env.VERCEL) {
+  server = app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
+}
 
 // Graceful shutdown — drain pool on restart so nodemon doesn't leave zombie connections
 async function gracefulShutdown(signal) {
   console.log(`[${signal}] Shutting down gracefully...`);
-  server.close(async () => {
+  if (server) {
+    server.close(async () => {
+      try {
+        await prisma.$disconnect();
+        await pool.end();
+        console.log('Pool and Prisma disconnected cleanly.');
+      } catch (e) {
+        console.error('Shutdown error:', e.message);
+      }
+      process.exit(0);
+    });
+  } else {
     try {
       await prisma.$disconnect();
       await pool.end();
@@ -1195,7 +1209,7 @@ async function gracefulShutdown(signal) {
       console.error('Shutdown error:', e.message);
     }
     process.exit(0);
-  });
+  }
 }
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
