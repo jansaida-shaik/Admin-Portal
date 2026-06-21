@@ -1,0 +1,274 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        BigInt   @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String?
+  role      Role     @default(STAFF)
+  
+  // Extensible user profiles
+  city      String?  // Primary Location
+  branch    String?  // Primary Branch
+  phone     String?  // Contact Line
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  transactions           Transaction[] @relation("UserTransactions")
+  sentTransactions       Transaction[] @relation("SentTransactions")
+  receivedTransactions   Transaction[] @relation("ReceivedTransactions")
+  assignments       Assignment[]
+  mobileNumbers     MobileNumber[]
+  mobileAssignments MobileAssignment[]
+  serviceRequests   ServiceRequest[]
+}
+
+enum Role {
+  ADMIN
+  STAFF
+}
+
+model Category {
+  id        BigInt   @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items     Item[]
+}
+
+model Vendor {
+  id        BigInt   @id @default(autoincrement())
+  name      String   @unique
+  contact   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items     Item[]
+}
+
+model Location {
+  id        BigInt   @id @default(autoincrement())
+  name      String
+  city      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  stocks           Stock[]
+  transactionsFrom Transaction[] @relation("FromLocation")
+  transactionsTo   Transaction[] @relation("ToLocation")
+  assignments      Assignment[]
+  internetBills    InternetBill[]
+}
+
+model Item {
+  id          BigInt   @id @default(autoincrement())
+  name        String
+  description String?
+  categoryId  BigInt
+  vendorId    BigInt?
+  attachments String?  // Store JSON array of uploaded file URLs
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  category     Category        @relation(fields: [categoryId], references: [id])
+  vendor       Vendor?         @relation(fields: [vendorId], references: [id])
+  stocks       Stock[]
+  transactions Transaction[]
+  assignments  Assignment[]
+  repairs      RepairHistory[]
+  serviceRequests ServiceRequest[]
+}
+
+model Stock {
+  id         BigInt   @id @default(autoincrement())
+  itemId     BigInt
+  locationId BigInt
+  quantity   Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  item       Item     @relation(fields: [itemId], references: [id])
+  location   Location @relation(fields: [locationId], references: [id])
+
+  @@unique([itemId, locationId])
+}
+
+model Transaction {
+  id             BigInt          @id @default(autoincrement())
+  itemId         BigInt
+  quantity       Int
+  type           TransactionType
+  fromLocationId BigInt?
+  toLocationId   BigInt?
+  userId         BigInt
+  sentById       BigInt?
+  receivedById   BigInt?
+  transactionDate DateTime?       @default(now())
+  vendor         String?
+  attachments    String?         // Store JSON array of uploaded invoice files
+  createdAt      DateTime        @default(now())
+
+  item         Item      @relation(fields: [itemId], references: [id])
+  fromLocation Location? @relation("FromLocation", fields: [fromLocationId], references: [id])
+  toLocation   Location? @relation("ToLocation", fields: [toLocationId], references: [id])
+  user         User      @relation("UserTransactions", fields: [userId], references: [id])
+  sentBy       User?     @relation("SentTransactions", fields: [sentById], references: [id])
+  receivedBy   User?     @relation("ReceivedTransactions", fields: [receivedById], references: [id])
+}
+
+enum TransactionType {
+  IN
+  OUT
+  TRANSFER
+}
+
+model Assignment {
+  id         BigInt    @id @default(autoincrement())
+  userId     BigInt
+  itemId     BigInt
+  locationId BigInt
+  quantity   Int       @default(1)
+  status     String    @default("ACTIVE")
+  assignedAt DateTime  @default(now())
+  returnedAt DateTime?
+
+  user       User      @relation(fields: [userId], references: [id])
+  item       Item      @relation(fields: [itemId], references: [id])
+  location   Location  @relation(fields: [locationId], references: [id])
+}
+
+model MobileNumber {
+  id          BigInt    @id @default(autoincrement())
+  number      String    @unique
+  provider    String?
+  planDetails String?
+  status      String    @default("AVAILABLE")
+  assignedTo  String?   
+  isDummy     Boolean   @default(false) // True for dummy test cards
+  userId           BigInt?
+  assignedAt       DateTime?
+  nextRechargeDate DateTime?
+
+  user        User?     @relation(fields: [userId], references: [id])
+  assignments MobileAssignment[]
+  recharges   MobileRecharge[]
+}
+
+model InternetBill {
+  id          BigInt    @id @default(autoincrement())
+  provider    String
+  planDetails  String?
+  speed        Int?
+  monthlyCost  Float?
+  dueDate      DateTime?
+  billingCycle String?   @default("MONTHLY")
+  status       String    @default("ACTIVE")
+  locationId   BigInt?
+  attachments  String?   // Store JSON array of payment receipt uploads
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  location    Location? @relation(fields: [locationId], references: [id])
+}
+
+model InternetExpense {
+  id          BigInt   @id @default(autoincrement())
+  date        DateTime
+  payee       String
+  type        String
+  reference   String?
+  debit       Float?
+  credit      Float?
+  amount      Float
+  balanceType String
+  createdAt   DateTime @default(now())
+}
+
+model RepairHistory {
+  id           BigInt   @id @default(autoincrement())
+  itemId       BigInt
+  repairDate   DateTime @default(now())
+  cost         Float    @default(0)
+  description  String
+  vendorName   String?
+  status       String   @default("COMPLETED")
+  createdAt    DateTime @default(now())
+
+  item         Item     @relation(fields: [itemId], references: [id])
+}
+
+model MobileAssignment {
+  id          BigInt    @id @default(autoincrement())
+  mobileId    BigInt
+  userId      BigInt?
+  assignedTo  String?
+  assignedAt  DateTime  @default(now())
+  returnedAt  DateTime?
+  status      String    @default("ACTIVE")
+
+  mobile      MobileNumber @relation(fields: [mobileId], references: [id])
+  user        User?        @relation(fields: [userId], references: [id])
+}
+
+model MobileRecharge {
+  id           BigInt   @id @default(autoincrement())
+  mobileId     BigInt
+  rechargeDate DateTime @default(now())
+  amount       Float
+  planDetails  String?
+  createdAt    DateTime @default(now())
+
+  mobile       MobileNumber @relation(fields: [mobileId], references: [id])
+}
+
+// ─── NEW ENTERPRISE MODULES ──────────────────────────────────────────────
+
+model ServiceRequest {
+  id          BigInt   @id @default(autoincrement())
+  title       String
+  description String
+  status      String   @default("PENDING") // PENDING, APPROVED, IN_PROGRESS, RESOLVED, REJECTED
+  userId      BigInt
+  itemId      BigInt?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation(fields: [userId], references: [id])
+  item        Item?    @relation(fields: [itemId], references: [id])
+}
+
+model OnboardingChecklist {
+  id            BigInt   @id @default(autoincrement())
+  employeeName  String
+  role          String
+  status        String   @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED
+  
+  // Discrete item boolean trackers
+  laptop        Boolean  @default(false)
+  mouse         Boolean  @default(false)
+  keyboard      Boolean  @default(false)
+  headset       Boolean  @default(false)
+  simCard       Boolean  @default(false)
+  
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model PlacementOrder {
+  id          BigInt   @id @default(autoincrement())
+  title       String
+  branchName  String
+  quantity    Int      @default(1)
+  status      String   @default("PENDING") // PENDING, FULFILLED, REJECTED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
