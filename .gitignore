@@ -44,6 +44,7 @@ next-env.d.ts
 /src/generated/prisma
 
 # temporary local files
+/public
 extracted_dashboard.js
 temp_thumb.bmp
 temp_thumb.png
