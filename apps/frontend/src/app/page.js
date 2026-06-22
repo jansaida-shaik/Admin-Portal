@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/lib/useAuth';
 
@@ -12,13 +12,8 @@ const DashIcons = {
 };
 
 export default function GlassInventoryDashboard() {
-  const [mounted, setMounted] = useState(false);
   const { data: session } = useAuth();
   const [activeSubTab, setActiveSubTab] = useState('List View');
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Core Inventory Data
   const totalAssets = 1248;
@@ -43,8 +38,8 @@ export default function GlassInventoryDashboard() {
       color: textPrimary,
       fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
       boxSizing: 'border-box',
-      opacity: mounted ? 1 : 0,
-      transform: mounted ? 'translateY(0)' : 'translateY(16px)',
+      opacity: 1,
+      transform: 'translateY(0)',
       transition: 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
     }}>
       
@@ -207,9 +202,7 @@ export default function GlassInventoryDashboard() {
                 <path d="M0,140 C100,120 150,40 250,80 C350,120 400,20 500,50 C550,65 600,30 600,30" fill="none" stroke={accentColor} strokeWidth="4" strokeLinecap="round" style={{ filter: `drop-shadow(0 4px 8px rgba(255, 90, 31, 0.2))` }} />
 
                 {/* Central Vector Node Circle */}
-                {mounted && (
-                  <circle cx="250" cy="80" r="5" fill={accentColor} stroke="var(--bg-panel)" strokeWidth="2" style={{ filter: 'drop-shadow(0 0 6px rgba(255, 90, 31, 0.4))' }} />
-                )}
+                <circle cx="250" cy="80" r="5" fill={accentColor} stroke="var(--bg-panel)" strokeWidth="2" style={{ filter: 'drop-shadow(0 0 6px rgba(255, 90, 31, 0.4))' }} />
               </svg>
 
               {/* SVG Timeline Label Grid */}

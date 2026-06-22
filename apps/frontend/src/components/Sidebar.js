@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { useTheme } from '@/context/ThemeContext';
 
 const Icons = {
@@ -63,9 +63,10 @@ const Icons = {
   ),
 };
 
-export default function Sidebar({ isOpen, onToggle }) {
+export default function Sidebar({ isOpen, onToggle, isMobile = false, onClose }) {
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
+  const showExpanded = isMobile || isOpen;
 
   const items = [
     { n: 'Dashboard', p: '/', i: Icons.Dashboard },
@@ -94,13 +95,13 @@ export default function Sidebar({ isOpen, onToggle }) {
         height: '80px',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: isOpen ? 'space-between' : 'center',
-        padding: isOpen ? '0 24px' : '0',
+        justifyContent: showExpanded ? 'space-between' : 'center',
+        padding: showExpanded ? '0 20px 0 24px' : '0',
         borderBottom: '1px solid var(--border-main)',
         boxSizing: 'border-box',
         transition: 'all 0.3s ease',
       }}>
-        {isOpen ? (
+        {showExpanded ? (
           <>
             {/* Brand Logo Container */}
             <div style={{ 
@@ -114,29 +115,49 @@ export default function Sidebar({ isOpen, onToggle }) {
               boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
               boxSizing: 'border-box',
             }}>
-              <img 
-                src="/CODEGNAN LOGO R mark.png" 
-                alt="Logo" 
-                style={{ width: '120px', height: 'auto', display: 'block', objectFit: 'contain' }} 
+              <Image
+                src="/CODEGNAN LOGO R mark.png"
+                alt="Logo"
+                width={120}
+                height={32}
+                priority
+                style={{ width: isMobile ? '112px' : '120px', height: 'auto', display: 'block', objectFit: 'contain' }}
               />
             </div>
             
-            {/* Collapse Hamburger Switch */}
-            <button onClick={onToggle} style={{
-              background: 'var(--bg-input)',
-              border: '1px solid var(--border-main)',
-              color: 'var(--text-sub)',
-              padding: '6px',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              transition: 'all 0.2s',
-            }}>
-              <svg fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" style={{ width: '16px', height: '16px' }}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5" />
-              </svg>
-            </button>
+            {isMobile ? (
+              <button onClick={onClose} style={{
+                background: 'var(--bg-input)',
+                border: '1px solid var(--border-main)',
+                color: 'var(--text-sub)',
+                padding: '6px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                transition: 'all 0.2s',
+              }}>
+                <svg fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" style={{ width: '16px', height: '16px' }}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+              </button>
+            ) : (
+              <button onClick={onToggle} style={{
+                background: 'var(--bg-input)',
+                border: '1px solid var(--border-main)',
+                color: 'var(--text-sub)',
+                padding: '6px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                transition: 'all 0.2s',
+              }}>
+                <svg fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" style={{ width: '16px', height: '16px' }}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5" />
+                </svg>
+              </button>
+            )}
           </>
         ) : (
           /* Closed State Toggle Icon / Custom Monogram */
@@ -167,10 +188,10 @@ export default function Sidebar({ isOpen, onToggle }) {
         flex: 1,
         overflowY: 'auto',
         overflowX: 'hidden',
-        padding: isOpen ? '24px 16px' : '24px 0',
+        padding: showExpanded ? '24px 16px' : '24px 0',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: isOpen ? 'stretch' : 'center',
+        alignItems: showExpanded ? 'stretch' : 'center',
         gap: '8px',
         boxSizing: 'border-box',
       }}>
@@ -179,16 +200,27 @@ export default function Sidebar({ isOpen, onToggle }) {
           const Icon = item.i;
           
           return (
-            <Link key={item.n} href={item.p} prefetch={true} title={!isOpen ? item.n : ''} style={{ textDecoration: 'none' }}>
+            <Link
+              key={item.n}
+              href={item.p}
+              prefetch={true}
+              title={!showExpanded ? item.n : ''}
+              style={{ textDecoration: 'none' }}
+              onClick={() => {
+                if (isMobile && onClose) {
+                  onClose();
+                }
+              }}
+            >
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: isOpen ? 'flex-start' : 'center',
-                gap: isOpen ? '14px' : '0',
-                padding: isOpen ? '12px 16px' : '0',
-                width: isOpen ? 'auto' : '44px',
-                height: isOpen ? 'auto' : '44px',
-                borderRadius: isOpen ? '14px' : '50%',
+                justifyContent: showExpanded ? 'flex-start' : 'center',
+                gap: showExpanded ? '14px' : '0',
+                padding: showExpanded ? '12px 16px' : '0',
+                width: showExpanded ? 'auto' : '44px',
+                height: showExpanded ? 'auto' : '44px',
+                borderRadius: showExpanded ? '14px' : '50%',
                 background: act ? 'var(--text-head)' : 'transparent',
                 color: act ? (theme === 'light' ? '#fff' : '#000') : 'var(--text-sub)',
                 cursor: 'pointer',
@@ -212,7 +244,7 @@ export default function Sidebar({ isOpen, onToggle }) {
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '20px', height: '20px' }}>
                   <Icon />
                 </div>
-                {isOpen && (
+                {showExpanded && (
                   <span style={{
                     fontSize: '13px',
                     fontWeight: act ? 800 : 600,

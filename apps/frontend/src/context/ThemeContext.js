@@ -7,15 +7,19 @@ const ThemeContext = createContext(null);
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState('dark'); // Safe default for server-side rendering
 
-  // Load theme preference on client mount to avoid hydration mismatch
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light' || savedTheme === 'dark') {
-      setTheme(savedTheme);
-    } else {
+    const frame = window.requestAnimationFrame(() => {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light' || savedTheme === 'dark') {
+        setTheme(savedTheme);
+        return;
+      }
+
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       setTheme(prefersDark ? 'dark' : 'light');
-    }
+    });
+
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   // Sync theme changes to the DOM and localStorage

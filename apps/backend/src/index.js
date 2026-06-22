@@ -3,6 +3,14 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const { prisma, pool } = require('./prisma');
+const {
+  formatDatabaseConnectionMessage,
+  isDatabaseConnectionError
+} = require('./utils/databaseError');
+const {
+  normalizeMobileRecord,
+  resolveMobileProvider
+} = require('./utils/mobileProviders');
 const app = express();
 
 const asyncHandler = require('./utils/asyncHandler');
@@ -649,6 +657,11 @@ app.get('/api/mobile-numbers', authenticate, asyncHandler(async (req, res) => {
           mode: 'insensitive'
         }
       }
+    }, {
+      provider: {
+        contains: search,
+        mode: 'insensitive'
+      }
     }]
   } : {};
   const [data, total] = await Promise.all([prisma.mobileNumber.findMany({
@@ -670,7 +683,7 @@ app.get('/api/mobile-numbers', authenticate, asyncHandler(async (req, res) => {
     where
   })]);
   res.json({
-    data,
+    data: normalizeMobileRecord(data),
     total,
     page,
     limit,
@@ -712,7 +725,7 @@ app.get('/api/mobile-numbers/:id', authenticate, asyncHandler(async (req, res) =
   if (!mobile) return res.status(404).json({
     error: 'Mobile number not found'
   });
-  res.json(mobile);
+  res.json(normalizeMobileRecord(mobile));
 }));
 app.post('/api/mobile-numbers', authenticate, asyncHandler(async (req, res) => {
   const {
@@ -721,20 +734,34 @@ app.post('/api/mobile-numbers', authenticate, asyncHandler(async (req, res) => {
     planDetails,
     status,
     assignedTo,
-    isDummy
+    isDummy,
+    nextRechargeDate
   } = req.body;
+
+  let normalizedProvider;
+  try {
+    normalizedProvider = resolveMobileProvider(provider, {
+      required: true
+    });
+  } catch (error) {
+    return res.status(400).json({
+      error: error.message
+    });
+  }
+
   const mob = await prisma.mobileNumber.create({
     data: {
       number,
-      provider,
+      provider: normalizedProvider,
       planDetails,
       status: status || 'AVAILABLE',
       assignedTo: assignedTo || null,
       isDummy: isDummy === true,
-      assignedAt: assignedTo ? new Date() : null
+      assignedAt: assignedTo ? new Date() : null,
+      nextRechargeDate: nextRechargeDate ? new Date(nextRechargeDate) : null
     }
   });
-  res.status(201).json(mob);
+  res.status(201).json(normalizeMobileRecord(mob));
 }));
 app.put('/api/mobile-numbers/:id', authenticate, asyncHandler(async (req, res) => {
   const {
@@ -746,13 +773,25 @@ app.put('/api/mobile-numbers/:id', authenticate, asyncHandler(async (req, res) =
     nextRechargeDate,
     isDummy
   } = req.body;
+
+  let normalizedProvider;
+  try {
+    normalizedProvider = resolveMobileProvider(provider, {
+      required: true
+    });
+  } catch (error) {
+    return res.status(400).json({
+      error: error.message
+    });
+  }
+
   const mob = await prisma.mobileNumber.update({
     where: {
       id: BigInt(req.params.id)
     },
     data: {
       number,
-      provider,
+      provider: normalizedProvider,
       planDetails,
       status,
       assignedTo: assignedTo || null,
@@ -761,7 +800,7 @@ app.put('/api/mobile-numbers/:id', authenticate, asyncHandler(async (req, res) =
       nextRechargeDate: nextRechargeDate ? new Date(nextRechargeDate) : null
     }
   });
-  res.json(mob);
+  res.json(normalizeMobileRecord(mob));
 }));
 app.delete('/api/mobile-numbers/:id', authenticate, asyncHandler(async (req, res) => {
   await prisma.mobileNumber.delete({
@@ -1182,9 +1221,25 @@ app.put('/api/placements/:id', authenticate, asyncHandler(async (req, res) => {
   res.json(order);
 }));
 let server;
-if (!process.env.VERCEL) {
-  server = app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
+async function startServer() {
+  if (process.env.VERCEL) {
+    return;
+  }
+
+  try {
+    await prisma.$connect();
+    server = app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
+  } catch (err) {
+    if (isDatabaseConnectionError(err)) {
+      console.error(formatDatabaseConnectionMessage());
+      console.error('Start PostgreSQL and verify apps/backend/.env before restarting the backend.');
+    } else {
+      console.error('Failed to start backend:', err);
+    }
+    process.exit(1);
+  }
 }
+startServer();
 
 // Graceful shutdown — drain pool on restart so nodemon doesn't leave zombie connections
 async function gracefulShutdown(signal) {

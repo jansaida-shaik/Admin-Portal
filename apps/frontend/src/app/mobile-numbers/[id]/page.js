@@ -1,7 +1,14 @@
 'use client';
-import { use, useState, useEffect } from 'react';
+import { use, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { fetchApi } from '@/lib/api';
+import CarrierLogo from '@/components/mobile/CarrierLogo';
+import MobileProviderPicker from '@/components/mobile/MobileProviderPicker';
+import {
+  formatMobileNumber,
+  getTelecomBrandColor,
+  normalizeMobileProvider
+} from '@/lib/mobileProviders';
 
 export default function MobileDetails({ params }) {
   const resolvedParams = use(params);
@@ -22,34 +29,59 @@ export default function MobileDetails({ params }) {
   });
   const [isSaving, setIsSaving] = useState(false);
 
-  async function loadMobile() {
+  const syncMobileState = (data) => {
+    setMobile(data);
+    setEditForm({
+      number: data.number || '',
+      provider: normalizeMobileProvider(data.provider) || 'Airtel',
+      planDetails: data.planDetails || '',
+      status: data.status || 'AVAILABLE',
+      nextRechargeDate: data.nextRechargeDate ? data.nextRechargeDate.substring(0, 10) : ''
+    });
+    setError(null);
+  };
+
+  const loadMobile = async () => {
     try {
-      setLoading(true);
       const data = await fetchApi(`/mobile-numbers/${mobileId}`);
-      setMobile(data);
-      
-      setEditForm({
-        number: data.number || '',
-        provider: data.provider || '',
-        planDetails: data.planDetails || '',
-        status: data.status || 'AVAILABLE',
-        nextRechargeDate: data.nextRechargeDate ? data.nextRechargeDate.substring(0, 10) : ''
-      });
+      syncMobileState(data);
+      return data;
     } catch (err) {
       setError(err.message);
-    } finally {
-      setLoading(false);
+      throw err;
     }
-  }
+  };
 
   useEffect(() => {
-    loadMobile();
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const data = await fetchApi(`/mobile-numbers/${mobileId}`);
+        if (!cancelled) {
+          syncMobileState(data);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(err.message);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [mobileId]);
 
   const handleSave = async (e) => {
     e.preventDefault();
     try {
       setIsSaving(true);
+      setLoading(true);
       const updated = await fetchApi(`/mobile-numbers/${mobileId}`, {
         method: 'PUT',
         body: JSON.stringify(editForm)
@@ -61,6 +93,7 @@ export default function MobileDetails({ params }) {
       alert(`Failed to update SIM profile: ${err.message}`);
     } finally {
       setIsSaving(false);
+      setLoading(false);
     }
   };
 
@@ -85,12 +118,15 @@ export default function MobileDetails({ params }) {
   };
 
   const sStyle = getStatusConfig(mobile.status);
+  const providerName = normalizeMobileProvider(mobile.provider) || 'Airtel';
+  const brandColor = getTelecomBrandColor(providerName);
+  const formattedNumber = formatMobileNumber(mobile.number);
 
   const cardStyle = {
     background: 'var(--bg-panel)', 
     border: '1px solid var(--border-main)',
     borderRadius: '24px', 
-    padding: '28px', 
+    padding: 'clamp(20px, 4vw, 28px)', 
     boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
   };
 
@@ -109,9 +145,9 @@ export default function MobileDetails({ params }) {
   };
 
   return (
-    <div style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: '32px', boxSizing: 'border-box', padding:'24px' }}>
+    <div style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: '32px', boxSizing: 'border-box' }}>
       
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <Link href="/mobile-numbers" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: 700, color: '#F58220', textDecoration: 'none', transition:'transform 0.2s' }} onMouseEnter={e=>e.currentTarget.style.transform='translateX(-4px)'} onMouseLeave={e=>e.currentTarget.style.transform='translateX(0)'}>
           ← Back to Mobile Communications
         </Link>
@@ -143,7 +179,7 @@ export default function MobileDetails({ params }) {
         background: 'var(--bg-panel)', 
         border: '1px solid var(--border-main)', 
         borderRadius: '28px',
-        padding: '40px', 
+        padding: 'clamp(24px, 5vw, 40px)', 
         display: 'flex', 
         flexWrap: 'wrap', 
         gap: '32px', 
@@ -157,19 +193,19 @@ export default function MobileDetails({ params }) {
 
         <div style={{
           width: '84px', height: '84px', borderRadius: '24px',
-          background: sStyle.bg,
-          border: `1px solid ${sStyle.border}`,
+          background: `${brandColor}18`,
+          border: `1px solid ${brandColor}3d`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          color: sStyle.color, fontSize: '32px', flexShrink: 0,
-          boxShadow: `0 8px 20px ${sStyle.color}20`
+          flexShrink: 0,
+          boxShadow: `0 8px 20px ${brandColor}20`
         }}>
-          📶
+          <CarrierLogo provider={providerName} size={56} />
         </div>
 
         <div style={{ flexGrow: 1, zIndex:1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
-            <h1 style={{ fontSize: '32px', fontWeight: 900, color: 'var(--text-head)', margin: 0, fontFamily: 'monospace', letterSpacing: '1px' }}>
-              {mobile.number.replace(/(\d{5})(\d{5})/, '$1 $2')}
+            <h1 style={{ fontSize: 'clamp(24px, 6vw, 32px)', fontWeight: 900, color: 'var(--text-head)', margin: 0, fontFamily: 'monospace', letterSpacing: '1px', wordBreak: 'break-word' }}>
+              {formattedNumber}
             </h1>
             <span style={{
               color: sStyle.color, 
@@ -182,13 +218,13 @@ export default function MobileDetails({ params }) {
             </span>
           </div>
           <p style={{ margin: '10px 0 0 0', fontSize: '15px', color: 'var(--text-sub)', fontWeight:600 }}>
-            Carrier: <span style={{ color: 'var(--text-head)', fontWeight:800 }}>{mobile.provider || 'Airtel'}</span> • <span style={{ opacity: 0.8 }}>Plan: {mobile.planDetails || 'Standard Corporate'}</span>
+            Carrier: <span style={{ color: brandColor, fontWeight:800 }}>{providerName}</span> • <span style={{ opacity: 0.8 }}>Plan: {mobile.planDetails || 'Standard Corporate'}</span>
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', zIndex:1 }}>
+        <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', zIndex:1, width: '100%' }}>
           {/* Recharge Countdown Grid Node */}
-          <div className="glass-card" style={{ minWidth: '180px', background: 'rgba(245,158,11,0.04)', border: '1px solid rgba(245,158,11,0.15)', borderRadius: '20px', padding: '20px 24px' }}>
+          <div className="glass-card" style={{ flex: '1 1 180px', minWidth: '180px', background: 'rgba(245,158,11,0.04)', border: '1px solid rgba(245,158,11,0.15)', borderRadius: '20px', padding: '20px 24px' }}>
             <div style={{ fontSize: '10px', color: '#f59e0b', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.05em' }}>📅 Next Recharge</div>
             <div style={{ fontSize: '16px', fontWeight: 850, color: 'var(--text-head)', marginTop: '6px' }}>
               {mobile.nextRechargeDate 
@@ -199,7 +235,7 @@ export default function MobileDetails({ params }) {
           </div>
 
           {/* Active Personnel Assignee Grid Node */}
-          <div className="glass-card" style={{ minWidth: '240px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-main)', borderRadius: '20px', padding: '20px 24px' }}>
+          <div className="glass-card" style={{ flex: '1 1 240px', minWidth: '240px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-main)', borderRadius: '20px', padding: '20px 24px' }}>
             <div style={{ fontSize: '10px', color: 'var(--text-sub)', textTransform: 'uppercase', fontWeight: 800, letterSpacing:'0.05em' }}>Registered Assignee</div>
             {mobile.user ? (
               <div style={{marginTop:'6px'}}>
@@ -222,7 +258,7 @@ export default function MobileDetails({ params }) {
       </div>
 
       {/* Multi-column Detail Log Matrix */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))', gap: '28px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '28px' }}>
         
         {/* LEFT VECTOR: SIM CUSTODY LOG */}
         <div style={cardStyle}>
@@ -273,7 +309,7 @@ export default function MobileDetails({ params }) {
           {mobile.recharges && mobile.recharges.length > 0 ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {mobile.recharges.map(rec => (
-                <div key={rec.id.toString()} className="glass-card" style={{ padding: '18px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-main)', borderRadius: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div key={rec.id.toString()} className="glass-card" style={{ padding: '18px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-main)', borderRadius: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
                   <div>
                     <div style={{ fontWeight: 800, color: 'var(--text-head)', fontSize:'14px' }}>{rec.planDetails || 'Prepaid Recharge Payload'}</div>
                     <div style={{ fontSize: '12px', color: 'var(--text-sub)', marginTop: '4px', fontWeight:600 }}>Cleared {new Date(rec.rechargeDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}</div>
@@ -308,7 +344,7 @@ export default function MobileDetails({ params }) {
             borderRadius: '28px', 
             width: '100%', 
             maxWidth: '500px', 
-            padding: '36px',
+            padding: 'clamp(20px, 5vw, 36px)',
             boxShadow: '0 30px 60px rgba(0,0,0,0.5)', 
             boxSizing: 'border-box',
             position:'relative',
@@ -335,17 +371,15 @@ export default function MobileDetails({ params }) {
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                <div>
-                  <label style={{ fontSize: '11px', color: 'var(--text-sub)', fontWeight: 800, letterSpacing:'0.05em' }}>OPERATOR CARRIER</label>
-                  <input 
-                    type="text" 
-                    value={editForm.provider}
-                    onChange={e => setEditForm({ ...editForm, provider: e.target.value })}
-                    style={inputStyle} 
-                    placeholder="e.g. Airtel, Jio"
-                  />
-                </div>
+              <MobileProviderPicker
+                value={editForm.provider}
+                onChange={(provider) => setEditForm({ ...editForm, provider })}
+                label="OPERATOR CARRIER"
+                helperText="Select the exact carrier logo and brand name to save."
+                dense
+              />
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '20px' }}>
                 <div>
                   <label style={{ fontSize: '11px', color: 'var(--text-sub)', fontWeight: 800, letterSpacing:'0.05em' }}>OPERATIONAL STATUS</label>
                   <select 
@@ -357,6 +391,15 @@ export default function MobileDetails({ params }) {
                     <option value="ASSIGNED">ASSIGNED</option>
                     <option value="INACTIVE">INACTIVE</option>
                   </select>
+                </div>
+                <div>
+                  <label style={{ fontSize: '11px', color: '#f59e0b', fontWeight: 800, letterSpacing:'0.05em' }}>📅 NEXT RECHARGE CYCLICAL DATE</label>
+                  <input 
+                    type="date" 
+                    value={editForm.nextRechargeDate}
+                    onChange={e => setEditForm({ ...editForm, nextRechargeDate: e.target.value })}
+                    style={{ ...inputStyle, border: '1px solid rgba(245,158,11,0.3)', color: '#f59e0b' }} 
+                  />
                 </div>
               </div>
 
@@ -371,17 +414,7 @@ export default function MobileDetails({ params }) {
                 />
               </div>
 
-              <div>
-                <label style={{ fontSize: '11px', color: '#f59e0b', fontWeight: 800, letterSpacing:'0.05em' }}>📅 NEXT RECHARGE CYCLICAL DATE</label>
-                <input 
-                  type="date" 
-                  value={editForm.nextRechargeDate}
-                  onChange={e => setEditForm({ ...editForm, nextRechargeDate: e.target.value })}
-                  style={{ ...inputStyle, border: '1px solid rgba(245,158,11,0.3)', color: '#f59e0b' }} 
-                />
-              </div>
-
-              <div style={{ display: 'flex', gap: '16px', marginTop: '16px' }}>
+              <div style={{ display: 'flex', gap: '16px', marginTop: '16px', flexWrap: 'wrap' }}>
                 <button 
                   type="button"
                   onClick={() => setIsEditModalOpen(false)}

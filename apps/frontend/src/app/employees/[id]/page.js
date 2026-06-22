@@ -2,6 +2,8 @@
 import { use, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { fetchApi } from '@/lib/api';
+import CarrierLogo from '@/components/mobile/CarrierLogo';
+import { formatMobileNumber, normalizeMobileProvider } from '@/lib/mobileProviders';
 
 export default function EmployeeAssets({ params }) {
   const resolvedParams = use(params);
@@ -152,15 +154,18 @@ export default function EmployeeAssets({ params }) {
               onMouseEnter={e=>e.currentTarget.style.background='var(--bg-input)'}
               onMouseLeave={e=>e.currentTarget.style.background='transparent'}
               >
-                <div style={{ fontWeight: 800, fontFamily: 'monospace', fontSize: '16px', letterSpacing: '1px' }}>
-                  {n.number.replace(/(\d{5})(\d{5})/, '$1 $2')}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <CarrierLogo provider={n.provider} size={28} />
+                  <div style={{ fontWeight: 800, fontFamily: 'monospace', fontSize: '16px', letterSpacing: '1px' }}>
+                    {formatMobileNumber(n.number)}
+                  </div>
                 </div>
                 <div>
                   <span style={{ padding: '4px 12px', borderRadius: '20px', fontSize: '11px', fontWeight: 800, background: 'rgba(16,185,129,0.12)', color: '#10b981', border:'1px solid rgba(16,185,129,0.2)' }}>
                     {n.status}
                   </span>
                 </div>
-                <div style={{ color: 'var(--text-sub)', fontWeight: 700 }}>{n.provider || 'Airtel'}</div>
+                <div style={{ color: 'var(--text-sub)', fontWeight: 700 }}>{normalizeMobileProvider(n.provider) || 'Airtel'}</div>
               </div>
             ))}
           </div>

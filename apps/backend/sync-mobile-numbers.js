@@ -108,13 +108,13 @@ const mainGroup = `1	8977544081	Kranthi Kumar 	HYD		Every month 12th
 101	8977542590
 102	8977542591`;
 
-const ideaGroup = `1	9642988688	Pushpa Front Desk Vij 		Sai ram sir Proof
+const viGroup = `1	9642988688	Pushpa Front Desk Vij 		Sai ram sir Proof
 2	9912005777	Jaya Sree		Sai ram sir proof
 3	9052555952	Sai Ram SIr ( Proof )		Sai ram sir proof
 4	9966188852	Aisensy ( With maruthi )
 5	9951555957	Sai Ram SIr ( Proof )		Eswar Proof`;
 
-const ideaCorporate = `1	9966188839	Sravani PM Vijayawada
+const viCorporate = `1	9966188839	Sravani PM Vijayawada
 2	996699 2587	Vizag Front Office 
 3	996699 2597	Vizag Front Office`;
 
@@ -155,8 +155,8 @@ async function main() {
 
   const allParsed = [
     ...parseLines(mainGroup, 'BSNL'), // Default main group
-    ...parseLines(ideaGroup, 'Idea'),
-    ...parseLines(ideaCorporate, 'Idea')
+    ...parseLines(viGroup, 'Vi'),
+    ...parseLines(viCorporate, 'Vi')
   ];
 
   console.log(`Parsed ${allParsed.length} candidate records to upsert.`);

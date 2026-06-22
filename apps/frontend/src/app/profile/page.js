@@ -1,6 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { fetchApi } from '@/lib/api';
+import CarrierLogo from '@/components/mobile/CarrierLogo';
+import { formatMobileNumber, normalizeMobileProvider } from '@/lib/mobileProviders';
 
 export default function UserProfile() {
   const [me, setMe] = useState(null);
@@ -232,9 +234,12 @@ export default function UserProfile() {
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                   padding: '16px 20px', borderRadius: '16px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-main)'
                 }}>
-                  <div>
-                    <div style={{ fontWeight: 750, color: 'var(--text-head)', fontSize: '14px', fontFamily: 'monospace' }}>📱 {n.number}</div>
-                    <div style={{ fontSize: '12px', color: 'var(--text-sub)', fontWeight: 600, marginTop:'2px' }}>Provider: {n.provider || 'Airtel'}</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <CarrierLogo provider={n.provider} size={30} />
+                    <div>
+                      <div style={{ fontWeight: 750, color: 'var(--text-head)', fontSize: '14px', fontFamily: 'monospace' }}>{formatMobileNumber(n.number)}</div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-sub)', fontWeight: 600, marginTop:'2px' }}>Provider: {normalizeMobileProvider(n.provider) || 'Airtel'}</div>
+                    </div>
                   </div>
                   <span style={{ padding: '4px 10px', borderRadius: '8px', background: 'rgba(16,185,129,0.1)', color: '#10b981', fontSize: '11px', fontWeight: 800 }}>
                     ACTIVE

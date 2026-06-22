@@ -56,6 +56,21 @@ body {
   transition: background 0.4s ease;
 }
 
+html {
+  min-height: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+}
+
 .glass-frame {
   background: var(--bg-glass);
   backdrop-filter: blur(24px);
@@ -112,49 +127,118 @@ body.light-mode ::-webkit-scrollbar-thumb:hover {
   background: rgba(11, 49, 111, 0.5);
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
 /* ===================================================
-   UNIVERSAL RESPONSIVENESS LAYER
-   Handles dynamic adaptation for tablets and mobile
+   RESPONSIVE APP SHELL
    =================================================== */
 @media (max-width: 1024px) {
-  main {
-    padding: 24px !important;
+  .app-shell {
+    padding: 12px !important;
+  }
+
+  .app-shell__frame {
+    border-radius: 20px !important;
+  }
+
+  .app-shell__main {
+    padding: 24px 20px 28px !important;
+  }
+
+  .topbar-search input {
+    width: 100% !important;
   }
 }
 
 @media (max-width: 768px) {
-  /* Stack grid layouts to single columns on vertical screens */
-  div[style*="gridTemplateColumns"] {
+  .app-shell {
+    padding: 0 !important;
+  }
+
+  .app-shell__frame {
+    border-radius: 0 !important;
+  }
+
+  .app-shell__main {
+    padding: 20px 16px 24px !important;
+    scrollbar-gutter: auto !important;
+  }
+
+  .topbar-shell {
+    gap: 10px !important;
+  }
+
+  .topbar-actions {
+    justify-content: space-between !important;
+  }
+
+  h1 {
+    font-size: clamp(1.75rem, 7vw, 2.25rem) !important;
+  }
+
+  [style*="grid-template-columns"] {
     grid-template-columns: 1fr !important;
   }
-  
-  /* Compact the outer flex alignment groups */
-  div[style*="flexDirection: column"] {
-    gap: 16px !important;
-  }
 
-  /* Force filter bars to wrap on tiny viewports */
-  div[style*="height: 42px"] {
-    flex-wrap: wrap;
-    height: auto !important;
-    gap: 12px !important;
-  }
-
-  /* Limit input field width expansions */
-  input[style*="width: 220px"] {
-    width: 100% !important;
-  }
-  
-  /* Adjust Title typography weights */
-  h1 {
-    font-size: 22px !important;
-  }
-  
-  /* Table Scroller optimization */
-  div[style*="overflow-x: auto"] {
+  [style*="overflow-x: auto"] {
     margin-left: -16px;
     margin-right: -16px;
     width: calc(100% + 32px);
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+@media (max-width: 560px) {
+  .glass-card {
+    border-radius: 18px !important;
+  }
+
+  .mobile-filter-bar {
+    align-items: stretch !important;
+  }
+
+  .mobile-filter-meta {
+    width: 100%;
+    margin-left: 0 !important;
+    text-align: left;
+  }
+
+  .mobile-cards-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  [style*="min-width: 240px"] {
+    min-width: 100% !important;
+  }
+
+  [style*="max-width: 360px"] {
+    max-width: 100% !important;
+  }
+
+  [style*="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr))"] {
+    grid-template-columns: 1fr !important;
   }
 }
 

@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/lib/useAuth';
 
-export default function Topbar() {
+export default function Topbar({ isMobile = false, onOpenSidebar }) {
   const { data: session, logout } = useAuth();
   const [notifOpen, setNotifOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -32,17 +32,50 @@ export default function Topbar() {
   ];
 
   return (
-    <div style={{
+    <div className="topbar-shell" style={{
       height: '100%',
       display: 'flex',
-      alignItems: 'center',
+      alignItems: isMobile ? 'stretch' : 'center',
       justifyContent: 'space-between',
-      padding: '0 32px',
+      flexWrap: isMobile ? 'wrap' : 'nowrap',
+      gap: isMobile ? '12px' : '16px',
+      padding: isMobile ? '12px 16px' : '0 32px',
       boxSizing: 'border-box',
     }}>
-      
-      {/* 1. Real Global Functional Search Input */}
-      <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        flex: isMobile ? '1 1 100%' : '1 1 auto',
+        minWidth: 0,
+      }}>
+        {isMobile && (
+          <button
+            type="button"
+            onClick={onOpenSidebar}
+            aria-label="Open navigation"
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '12px',
+              border: '1px solid var(--border-main)',
+              background: 'var(--bg-panel)',
+              color: 'var(--text-head)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              flexShrink: 0,
+            }}
+          >
+            <svg fill="none" viewBox="0 0 24 24" strokeWidth="2.2" stroke="currentColor" style={{ width: '18px', height: '18px' }}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+          </button>
+        )}
+
+        {/* 1. Real Global Functional Search Input */}
+        <div className="topbar-search" style={{ position: 'relative', display: 'flex', alignItems: 'center', flex: '1 1 auto', minWidth: 0 }}>
         <svg fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="var(--text-sub)" style={{ width: '16px', height: '16px', position: 'absolute', left: '12px', opacity: 0.7 }}>
           <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
         </svg>
@@ -54,7 +87,7 @@ export default function Topbar() {
             border: '1px solid var(--border-main)',
             borderRadius: '12px',
             height: '38px',
-            width: '320px',
+            width: isMobile ? '100%' : '320px',
             padding: '0 12px 0 38px',
             color: 'var(--text-head)',
             fontSize: '13px',
@@ -66,10 +99,11 @@ export default function Topbar() {
           onFocus={(e) => e.currentTarget.style.borderColor = '#F58220'}
           onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border-main)'}
         />
+        </div>
       </div>
 
       {/* 2. Action & User Controls Row */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+      <div className="topbar-actions" style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: isMobile ? '10px' : '16px', marginLeft: isMobile ? 0 : 'auto', width: isMobile ? '100%' : 'auto' }}>
         
         {/* Alert Bell Wrapper for Positioning */}
         <div style={{ position: 'relative' }} ref={dropdownRef}>
@@ -105,7 +139,8 @@ export default function Topbar() {
               position: 'absolute',
               top: '48px',
               right: 0,
-              width: '340px',
+              width: isMobile ? 'min(340px, calc(100vw - 32px))' : '340px',
+              maxWidth: 'calc(100vw - 32px)',
               borderRadius: '20px',
               background: 'var(--bg-glass)',
               backdropFilter: 'blur(32px)',
@@ -166,7 +201,7 @@ export default function Topbar() {
               background: 'var(--bg-panel)',
               border: '1px solid var(--border-main)',
               borderRadius: '24px',
-              padding: '4px 12px 4px 4px',
+              padding: isMobile ? '4px 8px 4px 4px' : '4px 12px 4px 4px',
               boxShadow: '0 2px 10px rgba(0,0,0,0.03)',
               transition: 'all 0.2s',
             }}
@@ -189,14 +224,16 @@ export default function Topbar() {
               {session?.user?.name?.charAt(0).toUpperCase() || 'A'}
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
-              <span style={{ fontSize: '12px', fontWeight: 750, color: 'var(--text-head)' }}>
-                {session?.user?.name || 'Operator'}
-              </span>
-              <span style={{ fontSize: '9px', fontWeight: 700, color: 'var(--text-sub)', textTransform: 'uppercase', letterSpacing: '0.02em' }}>
-                {session?.user?.role || 'Admin'}
-              </span>
-            </div>
+            {!isMobile && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 750, color: 'var(--text-head)' }}>
+                  {session?.user?.name || 'Operator'}
+                </span>
+                <span style={{ fontSize: '9px', fontWeight: 700, color: 'var(--text-sub)', textTransform: 'uppercase', letterSpacing: '0.02em' }}>
+                  {session?.user?.role || 'Admin'}
+                </span>
+              </div>
+            )}
 
             <svg fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="var(--text-sub)" style={{ width: '10px', height: '10px', marginLeft: '6px', opacity: 0.7, transform: profileOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
               <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
@@ -209,7 +246,7 @@ export default function Topbar() {
               position: 'absolute',
               top: '48px',
               right: 0,
-              width: '200px',
+              width: isMobile ? 'min(220px, calc(100vw - 32px))' : '200px',
               borderRadius: '16px',
               background: 'var(--bg-glass)',
               backdropFilter: 'blur(32px)',

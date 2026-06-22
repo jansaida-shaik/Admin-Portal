@@ -12,6 +12,7 @@ export function usePaginatedData(endpoint, dependencies = []) {
   const [totalPages, setTotalPages] = useState(1);
   
   const [search, setSearch] = useState('');
+  const dependencyKey = JSON.stringify(dependencies);
 
   useEffect(() => {
     async function loadData() {
@@ -34,7 +35,7 @@ export function usePaginatedData(endpoint, dependencies = []) {
       }
     }
     loadData();
-  }, [endpoint, page, limit, search, ...dependencies]);
+  }, [endpoint, page, limit, search, dependencyKey]);
 
   return {
     data,

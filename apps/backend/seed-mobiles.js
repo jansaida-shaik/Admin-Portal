@@ -108,14 +108,14 @@ const allNumbers = [
   { number: '8977542518', provider: 'Airtel', assignedTo: null, status: 'AVAILABLE' },
   { number: '8977542590', provider: 'Airtel', assignedTo: null, status: 'AVAILABLE' },
   { number: '8977542591', provider: 'Airtel', assignedTo: null, status: 'AVAILABLE' },
-  { number: '9642988688', provider: 'Idea', assignedTo: 'Pushpa - Front Desk Vij', status: 'ASSIGNED' },
-  { number: '9912005777', provider: 'Idea', assignedTo: 'Jaya Sree', status: 'ASSIGNED' },
-  { number: '9052555952', provider: 'Idea', assignedTo: 'Sai Ram Sir - Proof', status: 'ASSIGNED' },
-  { number: '9966188852', provider: 'Idea', assignedTo: 'Aisensy (With Maruthi)', status: 'ASSIGNED' },
-  { number: '9951555957', provider: 'Idea', assignedTo: 'Sai Ram Sir - Proof', status: 'ASSIGNED' },
-  { number: '9966188839', provider: 'Idea', planDetails: 'Corporate plan', assignedTo: 'Sravani PM Vijayawada', status: 'ASSIGNED' },
-  { number: '9966992587', provider: 'Idea', planDetails: 'Corporate plan', assignedTo: 'Vizag Front Office', status: 'ASSIGNED' },
-  { number: '9966992597', provider: 'Idea', planDetails: 'Corporate plan', assignedTo: 'Vizag Front Office', status: 'ASSIGNED' },
+  { number: '9642988688', provider: 'Vi', assignedTo: 'Pushpa - Front Desk Vij', status: 'ASSIGNED' },
+  { number: '9912005777', provider: 'Vi', assignedTo: 'Jaya Sree', status: 'ASSIGNED' },
+  { number: '9052555952', provider: 'Vi', assignedTo: 'Sai Ram Sir - Proof', status: 'ASSIGNED' },
+  { number: '9966188852', provider: 'Vi', assignedTo: 'Aisensy (With Maruthi)', status: 'ASSIGNED' },
+  { number: '9951555957', provider: 'Vi', assignedTo: 'Sai Ram Sir - Proof', status: 'ASSIGNED' },
+  { number: '9966188839', provider: 'Vi', planDetails: 'Corporate plan', assignedTo: 'Sravani PM Vijayawada', status: 'ASSIGNED' },
+  { number: '9966992587', provider: 'Vi', planDetails: 'Corporate plan', assignedTo: 'Vizag Front Office', status: 'ASSIGNED' },
+  { number: '9966992597', provider: 'Vi', planDetails: 'Corporate plan', assignedTo: 'Vizag Front Office', status: 'ASSIGNED' },
 ];
 
 async function main() {

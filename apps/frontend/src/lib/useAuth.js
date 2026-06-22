@@ -1,20 +1,23 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 
 export function useAuth() {
   const [session, setSession] = useState(null);
   const [status, setStatus] = useState('loading');
-  const router = useRouter();
 
   useEffect(() => {
-    const user = localStorage.getItem('user');
-    if (user) {
-      setSession({ user: JSON.parse(user) });
-      setStatus('authenticated');
-    } else {
+    const timer = window.setTimeout(() => {
+      const user = localStorage.getItem('user');
+      if (user) {
+        setSession({ user: JSON.parse(user) });
+        setStatus('authenticated');
+        return;
+      }
+
       setStatus('unauthenticated');
-    }
+    }, 0);
+
+    return () => window.clearTimeout(timer);
   }, []);
 
   const login = (userData, token) => {

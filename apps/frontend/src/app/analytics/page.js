@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 
 // Custom mini-charting primitives for lightweight performance
@@ -41,13 +41,6 @@ function Sparkline({ data, color, height = 36 }) {
 
 export default function AnalyticsDashboard() {
   const [selectedBranch, setSelectedBranch] = useState('ALL');
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
 
   // Analytical Mock Data Tailored for Codegnan Context
   const stats = [

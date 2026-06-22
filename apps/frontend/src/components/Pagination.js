@@ -1,14 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 export default function Pagination({ page, limit, totalPages, total, setPage, setLimit }) {
-  const [portalRoot, setPortalRoot] = useState(null);
-
-  useEffect(() => {
-    setPortalRoot(document.getElementById('pagination-portal-root'));
-  }, []);
+  const portalRoot = typeof document === 'undefined'
+    ? null
+    : document.getElementById('pagination-portal-root');
 
   const handlePrev = () => setPage((p) => Math.max(1, p - 1));
   const handleNext = () => setPage((p) => Math.min(totalPages, p + 1));

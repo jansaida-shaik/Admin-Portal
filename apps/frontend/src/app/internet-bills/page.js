@@ -83,7 +83,39 @@ export default function InternetBills() {
   }
 
   useEffect(() => {
-    loadData();
+    let cancelled = false;
+
+    (async () => {
+      setLoading(true);
+      try {
+        const [billResult, locResult] = await Promise.all([
+          fetchApi(`/internet-bills?page=${page}&limit=${limit}`),
+          fetchApi('/locations')
+        ]);
+
+        if (cancelled) {
+          return;
+        }
+
+        setBills(billResult.data || []);
+        setTotal(billResult.total || 0);
+        setTotalPages(billResult.totalPages || 1);
+        setLocations(locResult.data || locResult || []);
+        setError(null);
+      } catch (err) {
+        if (!cancelled) {
+          setError(err.message);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [page, limit]);
 
   // Run parallel side-fetch to calculate 100% accurate stats across the entire fleet
