@@ -14,24 +14,26 @@ export default function Pagination({ page, limit, totalPages, total, setPage, se
   const end = Math.min(page * limit, total);
 
   const paginationContent = (
-    <div style={{
+    <div className="pagination-shell" style={{
       width: '100%',
-      height: '60px',
+      minHeight: '60px',
       background: 'var(--bg-pagination-transparent, rgba(10, 15, 26, 0.55))',
       borderTop: '1px solid var(--border-main)',
       backdropFilter: 'blur(24px)',
       WebkitBackdropFilter: 'blur(24px)',
       boxShadow: '0 -4px 24px rgba(0, 0, 0, 0.15)',
-      padding: '0 40px',
+      padding: '12px 40px',
       boxSizing: 'border-box',
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
+      gap: '12px',
+      flexWrap: 'wrap',
       fontSize: '13px',
       color: 'var(--text-head)',
     }}>
       {/* Left: Per-page + count */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+      <div className="pagination-meta" style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
         <span style={{ fontWeight: 600, color: 'var(--text-sub)', fontSize: '12px' }}>Show per page:</span>
         <select
           value={limit}
@@ -63,7 +65,7 @@ export default function Pagination({ page, limit, totalPages, total, setPage, se
       </div>
 
       {/* Right: Prev / Page / Next */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <div className="pagination-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginLeft: 'auto' }}>
         <button
           onClick={handlePrev}
           disabled={page === 1}

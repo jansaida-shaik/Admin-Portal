@@ -144,10 +144,12 @@ async function main() {
   await prisma.mobileNumber.create({ data: { number: '9000100003', provider: 'Jio',    planDetails: 'Unlimited 4G - ₹449/mo', status: 'ASSIGNED', userId: staff2.id, assignedAt: new Date() } });
   await prisma.mobileNumber.create({ data: { number: '9000100004', provider: 'Vi',     planDetails: 'Corporate 4G - ₹399/mo', status: 'ASSIGNED', userId: staff3.id, assignedAt: new Date() } });
   await prisma.mobileNumber.create({ data: { number: '9000100005', provider: 'Airtel', planDetails: 'Unlimited 5G - ₹599/mo', status: 'ASSIGNED', userId: staff4.id, assignedAt: new Date() } });
-  await prisma.mobileNumber.create({ data: { number: '9000100006', provider: 'Jio',    planDetails: 'Unlimited 4G - ₹449/mo', status: 'AVAILABLE' } });
+  await prisma.mobileNumber.create({ data: { number: '9000100006', provider: 'Jio',    planDetails: 'Unlimited 4G - ₹449/mo', status: 'AVAILABLE', isDummy: true } });
   await prisma.mobileNumber.create({ data: { number: '9000100007', provider: 'Airtel', planDetails: 'Basic 4G - ₹299/mo',     status: 'AVAILABLE' } });
-  await prisma.mobileNumber.create({ data: { number: '9000100008', provider: 'BSNL',   planDetails: 'Corporate - ₹199/mo',    status: 'AVAILABLE' } });
-  console.log('  ✅ 8 mobile numbers\n');
+  await prisma.mobileNumber.create({ data: { number: '9000100008', provider: 'BSNL',   planDetails: 'Corporate - ₹199/mo',    status: 'AVAILABLE', isDummy: true } });
+  await prisma.mobileNumber.create({ data: { number: '9000100101', provider: 'Jio',    planDetails: 'Showcase 5G Demo',       status: 'ASSIGNED', assignedTo: 'Demo Pool - Jio', assignedAt: new Date(), isDummy: true } });
+  await prisma.mobileNumber.create({ data: { number: '9000100201', provider: 'BSNL',   planDetails: 'Showcase Voice + Data Demo', status: 'ASSIGNED', assignedTo: 'Demo Pool - BSNL', assignedAt: new Date(), isDummy: true } });
+  console.log('  ✅ 10 mobile numbers\n');
 
   // ─── Internet Bills ───────────────────────────────────────────────────────
   console.log('🌐 Creating internet bills...');

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <circle cx="64" cy="64" r="64" fill="#FDE3BA"/>
+  <radialGradient id="bsnl_orb" cx="0" cy="0" r="1" gradientTransform="translate(63 43) rotate(90) scale(36)" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#FFB26B"/>
+    <stop offset="100%" stop-color="#E86F2F"/>
+  </radialGradient>
+  <circle cx="63" cy="43" r="31" fill="url(#bsnl_orb)"/>
+  <path d="M58 29L66 32L69 40L60 47L52 40L58 29Z" fill="#fff" fill-opacity=".18"/>
+  <path d="M40 76C56 59 72 42 96 23" stroke="#0A8B43" stroke-width="9" stroke-linecap="round"/>
+  <path d="M86 20C95 22 100 30 98 40" stroke="#0A8B43" stroke-width="6" stroke-linecap="round"/>
+  <path d="M38 77C50 66 64 55 75 43" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+  <path d="M32 83C45 65 59 52 75 43" stroke="#fff" stroke-width="4.5" stroke-linecap="round" opacity=".92"/>
+  <text x="64" y="106" text-anchor="middle" fill="#213A8F" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="900" letter-spacing=".5">BSNL</text>
+</svg>

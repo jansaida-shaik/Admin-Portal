@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <circle cx="64" cy="64" r="64" fill="#E53935"/>
+  <path d="M40 48C48 33 64 26 79 26C93 26 104 35 104 48C104 61 94 70 80 75C66 80 55 87 50 99" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M52 89C55 75 63 66 74 60C81 56 86 50 88 43" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="64" y="104" text-anchor="middle" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" letter-spacing="-0.75">airtel</text>
+</svg>

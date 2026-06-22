@@ -215,6 +215,21 @@ body.light-mode ::-webkit-scrollbar-thumb:hover {
     border-radius: 18px !important;
   }
 
+  .pagination-shell {
+    padding: 12px 16px !important;
+    align-items: stretch !important;
+  }
+
+  .pagination-meta,
+  .pagination-actions {
+    width: 100%;
+  }
+
+  .pagination-actions {
+    margin-left: 0 !important;
+    justify-content: space-between !important;
+  }
+
   .mobile-filter-bar {
     align-items: stretch !important;
   }

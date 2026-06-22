@@ -4,7 +4,7 @@ export const MOBILE_PROVIDER_OPTIONS = [
     key: 'airtel',
     color: '#EF0000',
     accent: '#FF4D3A',
-    description: 'Red Airtel roundel with the white swoosh and wordmark.'
+    description: 'Red Airtel roundel with the white swoosh and lowercase airtel wordmark.'
   },
   {
     value: 'Jio',
@@ -25,7 +25,7 @@ export const MOBILE_PROVIDER_OPTIONS = [
     key: 'vi',
     color: '#9333EA',
     accent: '#F97316',
-    description: 'Red Vi roundel with the white VI mark and yellow dot.'
+    description: 'Red Vi roundel with the white VI mark, TM tag, and yellow dot.'
   }
 ];
 

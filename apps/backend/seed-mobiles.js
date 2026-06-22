@@ -116,6 +116,10 @@ const allNumbers = [
   { number: '9966188839', provider: 'Vi', planDetails: 'Corporate plan', assignedTo: 'Sravani PM Vijayawada', status: 'ASSIGNED' },
   { number: '9966992587', provider: 'Vi', planDetails: 'Corporate plan', assignedTo: 'Vizag Front Office', status: 'ASSIGNED' },
   { number: '9966992597', provider: 'Vi', planDetails: 'Corporate plan', assignedTo: 'Vizag Front Office', status: 'ASSIGNED' },
+  { number: '9000100101', provider: 'Jio', planDetails: 'Showcase 5G Demo', assignedTo: 'Demo Pool - Jio', status: 'ASSIGNED', isDummy: true },
+  { number: '9000100102', provider: 'Jio', planDetails: 'Showcase 5G Demo', assignedTo: null, status: 'AVAILABLE', isDummy: true },
+  { number: '9000100201', provider: 'BSNL', planDetails: 'Showcase Voice + Data Demo', assignedTo: 'Demo Pool - BSNL', status: 'ASSIGNED', isDummy: true },
+  { number: '9000100202', provider: 'BSNL', planDetails: 'Showcase Voice + Data Demo', assignedTo: null, status: 'AVAILABLE', isDummy: true },
 ];
 
 async function main() {
@@ -135,6 +139,7 @@ async function main() {
         status: n.status,
         assignedTo: n.assignedTo || null,
         assignedAt: n.assignedTo ? new Date() : null,
+        isDummy: Boolean(n.isDummy),
       }
     });
     i++;
