@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import CarrierLogo from '@/components/mobile/CarrierLogo';
@@ -15,12 +15,18 @@ export default function NewMobileNumberPage() {
     provider: 'Airtel',
     planDetails: '',
     status: 'AVAILABLE',
-    assignedTo: '',
+    userId: '',
     nextRechargeDate: '',
     isDummy: false
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
+  const [employees, setEmployees] = useState([]);
+  const [empSearch, setEmpSearch] = useState('');
+
+  useEffect(() => {
+    fetchApi('/users?limit=500').then(res => setEmployees(res.data || [])).catch(() => {});
+  }, []);
 
   const inputStyle = {
     width: '100%',
@@ -147,15 +153,77 @@ export default function NewMobileNumberPage() {
 
           <div>
             <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-sub)', fontWeight: 800, letterSpacing: '0.05em' }}>
-              ASSIGNED TO
+              ASSIGN TO EMPLOYEE
             </label>
-            <input
-              type="text"
-              value={formData.assignedTo}
-              onChange={(event) => setFormData({ ...formData, assignedTo: event.target.value })}
-              style={inputStyle}
-              placeholder="Optional assignee or department"
-            />
+            <div style={{ position: 'relative', marginTop: '8px' }}>
+              <input
+                type="text"
+                placeholder="Search employee name…"
+                value={empSearch}
+                onChange={e => {
+                  setEmpSearch(e.target.value);
+                  if (!e.target.value) setFormData({ ...formData, userId: '' });
+                }}
+                style={inputStyle}
+                autoComplete="off"
+              />
+              {empSearch && !formData.userId && employees.filter(emp =>
+                emp.name.toLowerCase().includes(empSearch.toLowerCase())
+              ).length > 0 && (
+                <div style={{
+                  position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 100,
+                  background: 'var(--bg-panel)', border: '1px solid var(--border-main)',
+                  borderRadius: '12px', maxHeight: '200px', overflowY: 'auto',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.3)', marginTop: '4px'
+                }}>
+                  {employees.filter(emp =>
+                    emp.name.toLowerCase().includes(empSearch.toLowerCase())
+                  ).slice(0, 8).map(emp => (
+                    <div
+                      key={emp.id.toString()}
+                      onClick={() => {
+                        setFormData({ ...formData, userId: emp.id.toString(), status: 'ASSIGNED' });
+                        setEmpSearch(emp.name);
+                      }}
+                      style={{
+                        padding: '12px 16px', cursor: 'pointer', display: 'flex',
+                        alignItems: 'center', gap: '10px', fontSize: '13px',
+                        borderBottom: '1px solid var(--border-main)', transition: 'background 0.15s'
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-input)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                    >
+                      <div style={{
+                        width: '28px', height: '28px', borderRadius: '50%', flexShrink: 0,
+                        background: 'linear-gradient(135deg, #F58220, #245fb4)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        color: '#fff', fontSize: '11px', fontWeight: 800
+                      }}>{emp.name.charAt(0).toUpperCase()}</div>
+                      <div>
+                        <div style={{ fontWeight: 700, color: 'var(--text-head)' }}>{emp.name}</div>
+                        <div style={{ fontSize: '11px', color: 'var(--text-sub)' }}>{emp.city || 'Global'} • {emp.branch || 'Main'}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {formData.userId && (
+                <button
+                  type="button"
+                  onClick={() => { setFormData({ ...formData, userId: '' }); setEmpSearch(''); }}
+                  style={{
+                    position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
+                    background: 'rgba(239,68,68,0.1)', border: 'none', color: '#ef4444',
+                    borderRadius: '6px', padding: '2px 8px', cursor: 'pointer', fontSize: '11px', fontWeight: 700
+                  }}
+                >✕ Clear</button>
+              )}
+            </div>
+            {formData.userId && (
+              <div style={{ fontSize: '11px', color: '#10b981', marginTop: '6px', fontWeight: 600 }}>
+                ✓ Linked to employee profile
+              </div>
+            )}
           </div>
 
           <div>
@@ -246,7 +314,7 @@ export default function NewMobileNumberPage() {
             </div>
             <div style={{ padding: '14px 16px', borderRadius: '16px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-main)' }}>
               <div style={{ fontSize: '11px', color: 'var(--text-sub)', fontWeight: 800, letterSpacing: '0.05em' }}>ASSIGNEE</div>
-              <div style={{ marginTop: '6px', color: 'var(--text-head)', fontWeight: 800 }}>{formData.assignedTo || 'Reserve Pool'}</div>
+              <div style={{ marginTop: '6px', color: 'var(--text-head)', fontWeight: 800 }}>{empSearch || 'Reserve Pool'}</div>
             </div>
             <div style={{ padding: '14px 16px', borderRadius: '16px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-main)' }}>
               <div style={{ fontSize: '11px', color: 'var(--text-sub)', fontWeight: 800, letterSpacing: '0.05em' }}>PLAN NOTE</div>

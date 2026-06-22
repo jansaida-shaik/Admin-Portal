@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { fetchApi } from '@/lib/api';
 import Pagination from '@/components/Pagination';
 import dynamic from 'next/dynamic';
+import { CITY_FILTER_OPTIONS, CITY_NAMES } from '@/lib/locations';
 
 const SearchableSelect = dynamic(() => import('@/components/SearchableSelect'), {
   loading: () => <div style={{ height: '42px', width: '100%', background: 'var(--bg-input)', borderRadius: '12px', animation: 'pulse 1.5s infinite' }} />
@@ -335,12 +336,7 @@ export default function InternetBills() {
           value={cityFilter} 
           onChange={(e) => { setCityFilter(e.target.value); setBranchFilter('ALL'); }} 
           placeholder="All Locations"
-          options={[
-            { value: 'ALL', label: 'All Locations' },
-            { value: 'Vijayawada', label: 'Vijayawada' },
-            { value: 'Hyderabad', label: 'Hyderabad' },
-            { value: 'Visakhapatnam', label: 'Visakhapatnam' }
-          ]}
+          options={CITY_FILTER_OPTIONS}
         />
 
         {/* 🏢 Branch Filter */}

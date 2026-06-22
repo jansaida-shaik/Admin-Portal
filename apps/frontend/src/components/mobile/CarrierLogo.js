@@ -4,10 +4,10 @@ import Image from 'next/image';
 import { getProviderKey } from '@/lib/mobileProviders';
 
 const LOGO_MAP = {
-  airtel: '/carriers/airtel.svg',
-  jio: '/carriers/jio.svg',
-  bsnl: '/carriers/bsnl.svg',
-  vi: '/carriers/vi.svg',
+  airtel: '/carriers/airtel.png',
+  jio:    '/carriers/jio.png',
+  bsnl:   '/carriers/bsnl.png',
+  vi:     '/carriers/vi.png',
 };
 
 export default function CarrierLogo({ provider, size = 44 }) {
@@ -16,12 +16,11 @@ export default function CarrierLogo({ provider, size = 44 }) {
 
   if (!src) {
     return (
-      <svg width={size} height={size} viewBox="0 0 100 100" fill="none" aria-hidden="true">
-        <circle cx="50" cy="50" r="50" fill="#374151" />
-        <rect x="28" y="56" width="8" height="12" rx="2" fill="white" />
-        <rect x="40" y="48" width="8" height="20" rx="2" fill="white" />
-        <rect x="52" y="40" width="8" height="28" rx="2" fill="white" />
-        <rect x="64" y="32" width="8" height="36" rx="2" fill="white" opacity="0.35" />
+      <svg width={size} height={size} viewBox="0 0 40 40" fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
+        <rect x="4"  y="26" width="6" height="10" rx="1.5" fill="currentColor" opacity="0.4"/>
+        <rect x="13" y="20" width="6" height="16" rx="1.5" fill="currentColor" opacity="0.6"/>
+        <rect x="22" y="13" width="6" height="23" rx="1.5" fill="currentColor" opacity="0.8"/>
+        <rect x="31" y="6"  width="6" height="30" rx="1.5" fill="currentColor"/>
       </svg>
     );
   }
@@ -32,6 +31,8 @@ export default function CarrierLogo({ provider, size = 44 }) {
       style={{
         width: size,
         height: size,
+        borderRadius: '50%',
+        overflow: 'hidden',
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',

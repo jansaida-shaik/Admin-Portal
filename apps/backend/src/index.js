@@ -734,19 +734,24 @@ app.post('/api/mobile-numbers', authenticate, asyncHandler(async (req, res) => {
     planDetails,
     status,
     assignedTo,
+    userId,
     isDummy,
     nextRechargeDate
   } = req.body;
 
   let normalizedProvider;
   try {
-    normalizedProvider = resolveMobileProvider(provider, {
-      required: true
-    });
+    normalizedProvider = resolveMobileProvider(provider, { required: true });
   } catch (error) {
-    return res.status(400).json({
-      error: error.message
-    });
+    return res.status(400).json({ error: error.message });
+  }
+
+  let resolvedAssignedTo = assignedTo || null;
+  let resolvedUserId = userId ? BigInt(userId) : null;
+
+  if (resolvedUserId) {
+    const emp = await prisma.user.findUnique({ where: { id: resolvedUserId }, select: { name: true } });
+    if (emp) resolvedAssignedTo = emp.name;
   }
 
   const mob = await prisma.mobileNumber.create({
@@ -755,9 +760,10 @@ app.post('/api/mobile-numbers', authenticate, asyncHandler(async (req, res) => {
       provider: normalizedProvider,
       planDetails,
       status: status || 'AVAILABLE',
-      assignedTo: assignedTo || null,
+      assignedTo: resolvedAssignedTo,
+      userId: resolvedUserId,
       isDummy: isDummy === true,
-      assignedAt: assignedTo ? new Date() : null,
+      assignedAt: resolvedAssignedTo ? new Date() : null,
       nextRechargeDate: nextRechargeDate ? new Date(nextRechargeDate) : null
     }
   });
@@ -770,35 +776,43 @@ app.put('/api/mobile-numbers/:id', authenticate, asyncHandler(async (req, res) =
     planDetails,
     status,
     assignedTo,
+    userId,
     nextRechargeDate,
     isDummy
   } = req.body;
 
   let normalizedProvider;
   try {
-    normalizedProvider = resolveMobileProvider(provider, {
-      required: true
-    });
+    normalizedProvider = resolveMobileProvider(provider, { required: true });
   } catch (error) {
-    return res.status(400).json({
-      error: error.message
-    });
+    return res.status(400).json({ error: error.message });
+  }
+
+  // Resolve assignedTo name from userId if provided
+  let resolvedAssignedTo = assignedTo || null;
+  let resolvedUserId = userId ? BigInt(userId) : null;
+
+  if (resolvedUserId) {
+    const emp = await prisma.user.findUnique({ where: { id: resolvedUserId }, select: { name: true } });
+    if (emp) resolvedAssignedTo = emp.name;
+  } else {
+    resolvedUserId = null;
   }
 
   const mob = await prisma.mobileNumber.update({
-    where: {
-      id: BigInt(req.params.id)
-    },
+    where: { id: BigInt(req.params.id) },
     data: {
       number,
       provider: normalizedProvider,
       planDetails,
       status,
-      assignedTo: assignedTo || null,
+      assignedTo: resolvedAssignedTo,
+      userId: resolvedUserId,
       isDummy: isDummy === true,
-      assignedAt: assignedTo ? new Date() : null,
+      assignedAt: resolvedAssignedTo ? new Date() : null,
       nextRechargeDate: nextRechargeDate ? new Date(nextRechargeDate) : null
-    }
+    },
+    include: { user: { select: { id: true, name: true, city: true, branch: true } } }
   });
   res.json(normalizeMobileRecord(mob));
 }));

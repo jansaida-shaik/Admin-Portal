@@ -5,6 +5,7 @@ import { fetchApi } from '@/lib/api';
 import { usePaginatedData } from '@/lib/usePaginatedData';
 import Pagination from '@/components/Pagination';
 import dynamic from 'next/dynamic';
+import { CITY_FILTER_OPTIONS, CITY_COLOR } from '@/lib/locations';
 
 const SearchableSelect = dynamic(() => import('@/components/SearchableSelect'), {
   loading: () => <div style={{ height: '42px', width: '100%', background: 'var(--bg-input)', borderRadius: '12px', animation: 'pulse 1.5s infinite' }} />
@@ -143,18 +144,9 @@ export default function VendorsDirectory() {
           value={locFilter} 
           onChange={(e) => setLocFilter(e.target.value)} 
           placeholder="All Locations"
-          options={[
-            { value: 'ALL', label: 'All Locations' },
-            { value: 'Vijayawada', label: 'Vijayawada' },
-            { value: 'Hyderabad', label: 'Hyderabad' },
-            { value: 'Visakhapatnam', label: 'Visakhapatnam' }
-          ]}
+          options={CITY_FILTER_OPTIONS}
           renderOption={(opt, isSelected) => {
-            let dotColor = 'transparent';
-            if (opt.value === 'Vijayawada') dotColor = '#F58220';
-            else if (opt.value === 'Hyderabad') dotColor = '#245fb4';
-            else if (opt.value === 'Visakhapatnam') dotColor = '#10b981';
-            
+            const dotColor = CITY_COLOR[opt.value] || 'transparent';
             return (
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 {opt.value !== 'ALL' && (

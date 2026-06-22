@@ -2,7 +2,7 @@
   "name": "inventory-monorepo",
   "private": true,
   "scripts": {
-    "dev": "pnpm -r --parallel run dev",
+    "dev": "pnpm -r --parallel --no-bail run dev",
     "build": "pnpm -r run build && rm -rf .next public && cp -r apps/frontend/.next .next && cp -r apps/frontend/public public",
     "start": "pnpm -r run start",
     "lint": "pnpm -r run lint"

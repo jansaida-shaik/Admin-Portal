@@ -10,6 +10,7 @@ import {
   getTelecomBrandColor,
   normalizeMobileProvider
 } from '@/lib/mobileProviders';
+import { CITY_FILTER_OPTIONS } from '@/lib/locations';
 
 const SearchableSelect = dynamic(() => import('@/components/SearchableSelect'), {
   loading: () => <div style={{ height: '42px', width: '100%', background: 'var(--bg-input)', borderRadius: '12px', animation: 'pulse 1.5s infinite' }} />
@@ -162,7 +163,7 @@ export default function MobileNumbers() {
           options={[{ value: 'ALL', label: 'All SIM Classes' }, { value: 'OFFICIAL', label: 'Official Corporate' }, { value: 'DUMMY', label: '🤖 Dummy / Test' }]}
         />
         <SearchableSelect value={cityFilter} onChange={e => { setCityFilter(e.target.value); setBranchFilter('ALL'); }} placeholder="All Locations"
-          options={[{ value: 'ALL', label: 'All Locations' }, { value: 'Vijayawada', label: 'Vijayawada' }, { value: 'Hyderabad', label: 'Hyderabad' }, { value: 'Visakhapatnam', label: 'Visakhapatnam' }]}
+          options={[{ value: 'ALL', label: 'All Locations' }, ...CITY_FILTER_OPTIONS.slice(1)]}
         />
         <SearchableSelect value={branchFilter} onChange={e => setBranchFilter(e.target.value)} placeholder="All Branches"
           options={[{ value: 'ALL', label: 'All Branches' }, ...locations.filter(l => cityFilter === 'ALL' || l.city === cityFilter).map(l => ({ value: l.name, label: l.name }))]}
