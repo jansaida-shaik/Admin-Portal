@@ -41,11 +41,16 @@ async function main() {
 
   // ─── Locations ────────────────────────────────────────────────────────────
   console.log('📍 Creating locations...');
-  const locVJA = await prisma.location.upsert({ where: { name: 'Vijayawada HQ' },    update: {}, create: { name: 'Vijayawada HQ' } });
-  const locHYD = await prisma.location.upsert({ where: { name: 'Hyderabad Branch' }, update: {}, create: { name: 'Hyderabad Branch' } });
-  const locGNT = await prisma.location.upsert({ where: { name: 'Guntur Centre' },    update: {}, create: { name: 'Guntur Centre' } });
-  const locBLR = await prisma.location.upsert({ where: { name: 'Bangalore Office' }, update: {}, create: { name: 'Bangalore Office' } });
-  const locCHE = await prisma.location.upsert({ where: { name: 'Chennai Branch' },   update: {}, create: { name: 'Chennai Branch' } });
+  async function getOrCreateLocation(name) {
+    const existing = await prisma.location.findFirst({ where: { name } });
+    if (existing) return existing;
+    return prisma.location.create({ data: { name } });
+  }
+  const locVJA = await getOrCreateLocation('Vijayawada HQ');
+  const locHYD = await getOrCreateLocation('Hyderabad Branch');
+  const locGNT = await getOrCreateLocation('Guntur Centre');
+  const locBLR = await getOrCreateLocation('Bangalore Office');
+  const locCHE = await getOrCreateLocation('Chennai Branch');
   console.log('  ✅ 5 locations\n');
 
   // ─── Items ────────────────────────────────────────────────────────────────
@@ -146,11 +151,11 @@ async function main() {
 
   // ─── Internet Bills ───────────────────────────────────────────────────────
   console.log('🌐 Creating internet bills...');
-  await prisma.internetBill.create({ data: { provider: 'Airtel Fiber',  planDetails: '300 Mbps Unlimited',   monthlyCost: 2499, dueDate: 5,  status: 'ACTIVE', locationId: locVJA.id } });
-  await prisma.internetBill.create({ data: { provider: 'ACT Fibernet',  planDetails: '150 Mbps Unlimited',   monthlyCost: 1499, dueDate: 10, status: 'ACTIVE', locationId: locHYD.id } });
-  await prisma.internetBill.create({ data: { provider: 'Jio Fiber',     planDetails: '100 Mbps Unlimited',   monthlyCost: 999,  dueDate: 15, status: 'ACTIVE', locationId: locGNT.id } });
-  await prisma.internetBill.create({ data: { provider: 'BSNL Broadband',planDetails: '50 Mbps Corporate',    monthlyCost: 799,  dueDate: 1,  status: 'ACTIVE', locationId: locBLR.id } });
-  await prisma.internetBill.create({ data: { provider: 'Airtel Fiber',  planDetails: '200 Mbps Business',    monthlyCost: 1999, dueDate: 7,  status: 'ACTIVE', locationId: locCHE.id } });
+  await prisma.internetBill.create({ data: { provider: 'Airtel Fiber',  planDetails: '300 Mbps Unlimited',   monthlyCost: 2499, dueDate: new Date('2026-06-05'),  status: 'ACTIVE', locationId: locVJA.id } });
+  await prisma.internetBill.create({ data: { provider: 'ACT Fibernet',  planDetails: '150 Mbps Unlimited',   monthlyCost: 1499, dueDate: new Date('2026-06-10'), status: 'ACTIVE', locationId: locHYD.id } });
+  await prisma.internetBill.create({ data: { provider: 'Jio Fiber',     planDetails: '100 Mbps Unlimited',   monthlyCost: 999,  dueDate: new Date('2026-06-15'), status: 'ACTIVE', locationId: locGNT.id } });
+  await prisma.internetBill.create({ data: { provider: 'BSNL Broadband',planDetails: '50 Mbps Corporate',    monthlyCost: 799,  dueDate: new Date('2026-06-01'),  status: 'ACTIVE', locationId: locBLR.id } });
+  await prisma.internetBill.create({ data: { provider: 'Airtel Fiber',  planDetails: '200 Mbps Business',    monthlyCost: 1999, dueDate: new Date('2026-06-07'),  status: 'ACTIVE', locationId: locCHE.id } });
   console.log('  ✅ 5 internet bills\n');
 
   console.log('✅ Done! All records seeded with integer IDs.');
