@@ -53,8 +53,8 @@ function buildDatabaseErrorResponse(err) {
   };
 }
 
-module.exports = {
+export { 
   buildDatabaseErrorResponse,
   formatDatabaseConnectionMessage,
   isDatabaseConnectionError
-};
+ };

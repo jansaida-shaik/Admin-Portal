@@ -73,13 +73,8 @@ export function formatMobileNumber(number) {
   const localNumber = digits.length > 10 ? digits.slice(-10) : digits;
 
   if (!localNumber) return '+91';
-  if (localNumber.length <= 5) return `+91 ${localNumber}`;
-  if (localNumber.length < 10) {
-    const pivot = Math.ceil(localNumber.length / 2);
-    return `+91 ${localNumber.slice(0, pivot)} ${localNumber.slice(pivot)}`;
-  }
-
-  return `+91 ${localNumber.slice(0, 5)} ${localNumber.slice(5)}`;
+  
+  return `+91 ${localNumber}`;
 }
 
 export function getMobileProviderMeta(providerName) {

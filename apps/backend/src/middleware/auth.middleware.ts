@@ -1,8 +1,8 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-const authenticate = (req, res, next) => {
+const authenticate = (req: any, res: any, next: any) => {
   const token = req.headers.authorization?.split(' ')[1] || req.cookies.token;
   if (!token) {
     return res.status(401).json({ error: 'Unauthorized' });
@@ -16,4 +16,4 @@ const authenticate = (req, res, next) => {
   }
 };
 
-module.exports = authenticate;
+export default authenticate;

@@ -1,7 +1,8 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
+import * as dotenv from 'dotenv';
+dotenv.config();
+import express from 'express';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
 const { prisma, pool } = require('./prisma');
 const {
   formatDatabaseConnectionMessage,
@@ -13,7 +14,7 @@ const {
 } = require('./utils/mobileProviders');
 const app = express();
 
-const asyncHandler = require('./utils/asyncHandler');
+import asyncHandler from './utils/asyncHandler';
 
 const PORT = process.env.PORT || 5001;
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -27,10 +28,10 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser());
-const path = require('path');
-const fs = require('fs');
-const multer = require('multer');
-const uploadDir = path.join(__dirname, '../uploads');
+import path from 'path';
+import fs from 'fs';
+import multer from 'multer';
+const uploadDir = process.env.VERCEL ? '/tmp/uploads' : path.join(__dirname, '../uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, {
     recursive: true
@@ -52,11 +53,12 @@ app.use('/uploads', express.static(uploadDir));
 app.set('json replacer', (key, value) => typeof value === 'bigint' ? value.toString() : value);
 
 // ─── Modules & Middleware ────────────────────────────────────────────────
-const authenticate = require('./middleware/auth.middleware');
-app.use('/api/auth', require('./modules/auth/auth.routes'));
+import authenticate from './middleware/auth.middleware';
+import authRoutes from './modules/auth/auth.routes';
+app.use('/api/auth', authRoutes);
 
 // ─── Dashboard Stats ───────────────────────────────────────────────────────
-app.get('/api/stats', authenticate, asyncHandler(async (req, res) => {
+app.get('/api/stats', authenticate, asyncHandler(async (req: any, res: any) => {
   const [totalItems, totalStock, totalVendors, totalUsers, totalMobile, totalBills, activeAssignments, activeBills, totalTransactions, recentTransactions] = await Promise.all([prisma.item.count(), prisma.stock.aggregate({
     _sum: {
       quantity: true
@@ -100,10 +102,11 @@ app.get('/api/stats', authenticate, asyncHandler(async (req, res) => {
 }));
 
 // ─── Items / Assets ────────────────────────────────────────────────────────
-app.use('/api/items', require('./modules/items/items.routes'));
+import itemsRoutes from './modules/items/items.routes';
+app.use('/api/items', itemsRoutes);
 
 // ─── Categories ────────────────────────────────────────────────────────────
-app.get('/api/categories', authenticate, asyncHandler(async (req, res) => {
+app.get('/api/categories', authenticate, asyncHandler(async (req: any, res: any) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 25;
   const skip = (page - 1) * limit;
@@ -122,7 +125,7 @@ app.get('/api/categories', authenticate, asyncHandler(async (req, res) => {
     totalPages: Math.ceil(total / limit)
   });
 }));
-app.post('/api/categories', authenticate, asyncHandler(async (req, res) => {
+app.post('/api/categories', authenticate, asyncHandler(async (req: any, res: any) => {
   const cat = await prisma.category.create({
     data: {
       name: req.body.name
@@ -132,7 +135,7 @@ app.post('/api/categories', authenticate, asyncHandler(async (req, res) => {
 }));
 
 // ─── Vendors ───────────────────────────────────────────────────────────────
-app.get('/api/vendors', authenticate, asyncHandler(async (req, res) => {
+app.get('/api/vendors', authenticate, asyncHandler(async (req: any, res: any) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 25;
   const skip = (page - 1) * limit;
@@ -175,7 +178,7 @@ app.get('/api/vendors', authenticate, asyncHandler(async (req, res) => {
     totalPages: Math.ceil(total / limit)
   });
 }));
-app.get('/api/vendors/:id', authenticate, asyncHandler(async (req, res) => {
+app.get('/api/vendors/:id', authenticate, asyncHandler(async (req: any, res: any) => {
   const vendor = await prisma.vendor.findUnique({
     where: {
       id: BigInt(req.params.id)
@@ -205,7 +208,7 @@ app.get('/api/vendors/:id', authenticate, asyncHandler(async (req, res) => {
   });
   res.json(vendor);
 }));
-app.post('/api/vendors', authenticate, asyncHandler(async (req, res) => {
+app.post('/api/vendors', authenticate, asyncHandler(async (req: any, res: any) => {
   const {
     name,
     contact
@@ -218,7 +221,7 @@ app.post('/api/vendors', authenticate, asyncHandler(async (req, res) => {
   });
   res.status(201).json(vendor);
 }));
-app.put('/api/vendors/:id', authenticate, asyncHandler(async (req, res) => {
+app.put('/api/vendors/:id', authenticate, asyncHandler(async (req: any, res: any) => {
   const {
     name,
     contact
@@ -234,7 +237,7 @@ app.put('/api/vendors/:id', authenticate, asyncHandler(async (req, res) => {
   });
   res.json(vendor);
 }));
-app.delete('/api/vendors/:id', authenticate, asyncHandler(async (req, res) => {
+app.delete('/api/vendors/:id', authenticate, asyncHandler(async (req: any, res: any) => {
   await prisma.vendor.delete({
     where: {
       id: BigInt(req.params.id)
@@ -246,7 +249,7 @@ app.delete('/api/vendors/:id', authenticate, asyncHandler(async (req, res) => {
 }));
 
 // ─── Locations ─────────────────────────────────────────────────────────────
-app.get('/api/locations', authenticate, asyncHandler(async (req, res) => {
+app.get('/api/locations', authenticate, asyncHandler(async (req: any, res: any) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 50; // Expose more locations!
   const skip = (page - 1) * limit;
@@ -267,7 +270,7 @@ app.get('/api/locations', authenticate, asyncHandler(async (req, res) => {
     totalPages: Math.ceil(total / limit)
   });
 }));
-app.post('/api/locations', authenticate, asyncHandler(async (req, res) => {
+app.post('/api/locations', authenticate, asyncHandler(async (req: any, res: any) => {
   const {
     name,
     city
@@ -282,11 +285,25 @@ app.post('/api/locations', authenticate, asyncHandler(async (req, res) => {
 }));
 
 // ─── Users / Employees ─────────────────────────────────────────────────────
-app.get('/api/users', authenticate, asyncHandler(async (req, res) => {
+app.get('/api/users', authenticate, asyncHandler(async (req: any, res: any) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 25;
   const skip = (page - 1) * limit;
+  const search = req.query.search;
+  const nameExact = req.query.nameExact;
+
+  const where: any = {};
+  if (nameExact) {
+    where.name = { equals: nameExact, mode: 'insensitive' };
+  } else if (search) {
+    where.OR = [
+      { name: { contains: search, mode: 'insensitive' } },
+      { email: { contains: search, mode: 'insensitive' } },
+    ];
+  }
+
   const [data, total] = await Promise.all([prisma.user.findMany({
+    where,
     skip,
     take: limit,
     include: {
@@ -304,7 +321,7 @@ app.get('/api/users', authenticate, asyncHandler(async (req, res) => {
     orderBy: {
       name: 'asc'
     }
-  }), prisma.user.count()]);
+  }), prisma.user.count({ where })]);
   res.json({
     data,
     total,
@@ -313,7 +330,7 @@ app.get('/api/users', authenticate, asyncHandler(async (req, res) => {
     totalPages: Math.ceil(total / limit)
   });
 }));
-app.get('/api/users/:id', authenticate, asyncHandler(async (req, res) => {
+app.get('/api/users/:id', authenticate, asyncHandler(async (req: any, res: any) => {
   const user = await prisma.user.findUnique({
     where: {
       id: BigInt(req.params.id)
@@ -340,7 +357,7 @@ app.get('/api/users/:id', authenticate, asyncHandler(async (req, res) => {
   });
   res.json(user);
 }));
-app.post('/api/users', authenticate, asyncHandler(async (req, res) => {
+app.post('/api/users', authenticate, asyncHandler(async (req: any, res: any) => {
   const {
     name,
     email,
@@ -363,7 +380,7 @@ app.post('/api/users', authenticate, asyncHandler(async (req, res) => {
   });
   res.status(201).json(user);
 }));
-app.put('/api/users/:id', authenticate, asyncHandler(async (req, res) => {
+app.put('/api/users/:id', authenticate, asyncHandler(async (req: any, res: any) => {
   const {
     name,
     email,
@@ -389,7 +406,7 @@ app.put('/api/users/:id', authenticate, asyncHandler(async (req, res) => {
 }));
 
 // ─── Stock ─────────────────────────────────────────────────────────────────
-app.get('/api/stocks', authenticate, asyncHandler(async (req, res) => {
+app.get('/api/stocks', authenticate, asyncHandler(async (req: any, res: any) => {
   const stocks = await prisma.stock.findMany({
     include: {
       item: {
@@ -405,7 +422,7 @@ app.get('/api/stocks', authenticate, asyncHandler(async (req, res) => {
   });
   res.json(stocks);
 }));
-app.post('/api/stocks', authenticate, asyncHandler(async (req, res) => {
+app.post('/api/stocks', authenticate, asyncHandler(async (req: any, res: any) => {
   const {
     itemId,
     locationId,
@@ -546,7 +563,7 @@ app.post('/api/stocks', authenticate, asyncHandler(async (req, res) => {
 }));
 
 // ─── Transactions / Audit Log ──────────────────────────────────────────────
-app.get('/api/transactions', authenticate, asyncHandler(async (req, res) => {
+app.get('/api/transactions', authenticate, asyncHandler(async (req: any, res: any) => {
   const transactions = await prisma.transaction.findMany({
     include: {
       item: {
@@ -587,7 +604,7 @@ app.get('/api/transactions', authenticate, asyncHandler(async (req, res) => {
 }));
 
 // ─── Assignments ───────────────────────────────────────────────────────────
-app.get('/api/assignments', authenticate, asyncHandler(async (req, res) => {
+app.get('/api/assignments', authenticate, asyncHandler(async (req: any, res: any) => {
   const assignments = await prisma.assignment.findMany({
     include: {
       user: {
@@ -610,7 +627,7 @@ app.get('/api/assignments', authenticate, asyncHandler(async (req, res) => {
   });
   res.json(assignments);
 }));
-app.post('/api/assignments', authenticate, asyncHandler(async (req, res) => {
+app.post('/api/assignments', authenticate, asyncHandler(async (req: any, res: any) => {
   const {
     userId,
     itemId,
@@ -634,7 +651,7 @@ app.post('/api/assignments', authenticate, asyncHandler(async (req, res) => {
 }));
 
 // ─── Mobile Numbers ────────────────────────────────────────────────────────
-app.get('/api/mobile-numbers', authenticate, asyncHandler(async (req, res) => {
+app.get('/api/mobile-numbers', authenticate, asyncHandler(async (req: any, res: any) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 25;
   const skip = (page - 1) * limit;
@@ -690,7 +707,7 @@ app.get('/api/mobile-numbers', authenticate, asyncHandler(async (req, res) => {
     totalPages: Math.ceil(total / limit)
   });
 }));
-app.get('/api/mobile-numbers/:id', authenticate, asyncHandler(async (req, res) => {
+app.get('/api/mobile-numbers/:id', authenticate, asyncHandler(async (req: any, res: any) => {
   const mobile = await prisma.mobileNumber.findUnique({
     where: {
       id: BigInt(req.params.id)
@@ -727,7 +744,7 @@ app.get('/api/mobile-numbers/:id', authenticate, asyncHandler(async (req, res) =
   });
   res.json(normalizeMobileRecord(mobile));
 }));
-app.post('/api/mobile-numbers', authenticate, asyncHandler(async (req, res) => {
+app.post('/api/mobile-numbers', authenticate, asyncHandler(async (req: any, res: any) => {
   const {
     number,
     provider,
@@ -769,7 +786,7 @@ app.post('/api/mobile-numbers', authenticate, asyncHandler(async (req, res) => {
   });
   res.status(201).json(normalizeMobileRecord(mob));
 }));
-app.put('/api/mobile-numbers/:id', authenticate, asyncHandler(async (req, res) => {
+app.put('/api/mobile-numbers/:id', authenticate, asyncHandler(async (req: any, res: any) => {
   const {
     number,
     provider,
@@ -816,7 +833,7 @@ app.put('/api/mobile-numbers/:id', authenticate, asyncHandler(async (req, res) =
   });
   res.json(normalizeMobileRecord(mob));
 }));
-app.delete('/api/mobile-numbers/:id', authenticate, asyncHandler(async (req, res) => {
+app.delete('/api/mobile-numbers/:id', authenticate, asyncHandler(async (req: any, res: any) => {
   await prisma.mobileNumber.delete({
     where: {
       id: BigInt(req.params.id)
@@ -826,7 +843,7 @@ app.delete('/api/mobile-numbers/:id', authenticate, asyncHandler(async (req, res
     success: true
   });
 }));
-app.get('/api/internet-expenses', authenticate, asyncHandler(async (req, res) => {
+app.get('/api/internet-expenses', authenticate, asyncHandler(async (req: any, res: any) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 25;
   const skip = (page - 1) * limit;
@@ -867,7 +884,7 @@ app.get('/api/internet-expenses', authenticate, asyncHandler(async (req, res) =>
 }));
 
 // ─── Internet Bills ────────────────────────────────────────────────────────
-app.get('/api/internet-bills', authenticate, asyncHandler(async (req, res) => {
+app.get('/api/internet-bills', authenticate, asyncHandler(async (req: any, res: any) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 25;
   const skip = (page - 1) * limit;
@@ -889,7 +906,7 @@ app.get('/api/internet-bills', authenticate, asyncHandler(async (req, res) => {
     totalPages: Math.ceil(total / limit)
   });
 }));
-app.post('/api/internet-bills', authenticate, asyncHandler(async (req, res) => {
+app.post('/api/internet-bills', authenticate, asyncHandler(async (req: any, res: any) => {
   const {
     provider,
     planDetails,
@@ -917,7 +934,7 @@ app.post('/api/internet-bills', authenticate, asyncHandler(async (req, res) => {
   });
   res.status(201).json(bill);
 }));
-app.put('/api/internet-bills/:id', authenticate, asyncHandler(async (req, res) => {
+app.put('/api/internet-bills/:id', authenticate, asyncHandler(async (req: any, res: any) => {
   const {
     provider,
     planDetails,
@@ -950,7 +967,7 @@ app.put('/api/internet-bills/:id', authenticate, asyncHandler(async (req, res) =
   });
   res.json(bill);
 }));
-app.delete('/api/internet-bills/:id', authenticate, asyncHandler(async (req, res) => {
+app.delete('/api/internet-bills/:id', authenticate, asyncHandler(async (req: any, res: any) => {
   await prisma.internetBill.delete({
     where: {
       id: BigInt(req.params.id)
@@ -974,7 +991,7 @@ const MODEL_MAP = {
   'mobile-numbers': 'mobileNumber',
   'internet-bills': 'internetBill'
 };
-app.get('/api/admin/database/:model', authenticate, asyncHandler(async (req, res) => {
+app.get('/api/admin/database/:model', authenticate, asyncHandler(async (req: any, res: any) => {
   const model = MODEL_MAP[req.params.model];
   if (!model) return res.status(404).json({
     error: 'Unknown model'
@@ -986,7 +1003,7 @@ app.get('/api/admin/database/:model', authenticate, asyncHandler(async (req, res
 }));
 
 // ─── File Attachments System ───────────────────────────────────────────────
-app.post('/api/upload', authenticate, upload.array('files', 10), (req, res) => {
+app.post('/api/upload', authenticate, upload.array('files', 10), (req: any, res: any) => {
   try {
     const fileUrls = req.files.map(file => `http://localhost:5001/uploads/${file.filename}`);
     res.json({
@@ -1001,7 +1018,7 @@ app.post('/api/upload', authenticate, upload.array('files', 10), (req, res) => {
 });
 
 // ─── Active Session Vector (/api/me) ───────────────────────────────────────
-app.get('/api/me', authenticate, asyncHandler(async (req, res) => {
+app.get('/api/me', authenticate, asyncHandler(async (req: any, res: any) => {
   if (req.user.id === 'admin') {
     return res.json({
       id: 'admin',
@@ -1040,7 +1057,7 @@ app.get('/api/me', authenticate, asyncHandler(async (req, res) => {
   });
   res.json(user);
 }));
-app.put('/api/me', authenticate, asyncHandler(async (req, res) => {
+app.put('/api/me', authenticate, asyncHandler(async (req: any, res: any) => {
   if (req.user.id === 'admin') {
     return res.status(403).json({
       error: 'Superadmin configuration is static.'
@@ -1071,7 +1088,7 @@ app.put('/api/me', authenticate, asyncHandler(async (req, res) => {
 }));
 
 // ─── Service Request Support System ───────────────────────────────────────
-app.get('/api/service-requests', authenticate, asyncHandler(async (req, res) => {
+app.get('/api/service-requests', authenticate, asyncHandler(async (req: any, res: any) => {
   const where = req.user.role !== 'ADMIN' ? {
     userId: BigInt(req.user.id)
   } : {};
@@ -1096,7 +1113,7 @@ app.get('/api/service-requests', authenticate, asyncHandler(async (req, res) => 
   });
   res.json(reqs);
 }));
-app.post('/api/service-requests', authenticate, asyncHandler(async (req, res) => {
+app.post('/api/service-requests', authenticate, asyncHandler(async (req: any, res: any) => {
   const {
     title,
     description,
@@ -1115,7 +1132,7 @@ app.post('/api/service-requests', authenticate, asyncHandler(async (req, res) =>
   });
   res.status(201).json(reqObj);
 }));
-app.put('/api/service-requests/:id', authenticate, asyncHandler(async (req, res) => {
+app.put('/api/service-requests/:id', authenticate, asyncHandler(async (req: any, res: any) => {
   const {
     status
   } = req.body;
@@ -1131,7 +1148,7 @@ app.put('/api/service-requests/:id', authenticate, asyncHandler(async (req, res)
 }));
 
 // ─── Onboarding Checklists ───────────────────────────────────────────────
-app.get('/api/onboarding', authenticate, asyncHandler(async (req, res) => {
+app.get('/api/onboarding', authenticate, asyncHandler(async (req: any, res: any) => {
   const obs = await prisma.onboardingChecklist.findMany({
     orderBy: {
       updatedAt: 'desc'
@@ -1139,7 +1156,7 @@ app.get('/api/onboarding', authenticate, asyncHandler(async (req, res) => {
   });
   res.json(obs);
 }));
-app.post('/api/onboarding', authenticate, asyncHandler(async (req, res) => {
+app.post('/api/onboarding', authenticate, asyncHandler(async (req: any, res: any) => {
   const {
     employeeName,
     role,
@@ -1165,7 +1182,7 @@ app.post('/api/onboarding', authenticate, asyncHandler(async (req, res) => {
   });
   res.status(201).json(ob);
 }));
-app.put('/api/onboarding/:id', authenticate, asyncHandler(async (req, res) => {
+app.put('/api/onboarding/:id', authenticate, asyncHandler(async (req: any, res: any) => {
   const {
     employeeName,
     role,
@@ -1197,7 +1214,7 @@ app.put('/api/onboarding/:id', authenticate, asyncHandler(async (req, res) => {
 }));
 
 // ─── Placement Orders ────────────────────────────────────────────────────
-app.get('/api/placements', authenticate, asyncHandler(async (req, res) => {
+app.get('/api/placements', authenticate, asyncHandler(async (req: any, res: any) => {
   const orders = await prisma.placementOrder.findMany({
     orderBy: {
       createdAt: 'desc'
@@ -1205,7 +1222,7 @@ app.get('/api/placements', authenticate, asyncHandler(async (req, res) => {
   });
   res.json(orders);
 }));
-app.post('/api/placements', authenticate, asyncHandler(async (req, res) => {
+app.post('/api/placements', authenticate, asyncHandler(async (req: any, res: any) => {
   const {
     title,
     branchName,
@@ -1220,7 +1237,7 @@ app.post('/api/placements', authenticate, asyncHandler(async (req, res) => {
   });
   res.status(201).json(order);
 }));
-app.put('/api/placements/:id', authenticate, asyncHandler(async (req, res) => {
+app.put('/api/placements/:id', authenticate, asyncHandler(async (req: any, res: any) => {
   const {
     status
   } = req.body;
@@ -1283,4 +1300,4 @@ async function gracefulShutdown(signal) {
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 
-module.exports = app;
+export default app;

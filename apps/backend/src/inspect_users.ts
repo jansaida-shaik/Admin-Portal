@@ -1,5 +1,6 @@
-require('dotenv').config();
-const jwt = require('jsonwebtoken');
+import * as dotenv from 'dotenv';
+dotenv.config();
+import jwt from 'jsonwebtoken';
 // Node 18+ has fetch built-in, so we can use global fetch directly.
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretjwtkey';

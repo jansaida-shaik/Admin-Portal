@@ -65,20 +65,20 @@ export default function UserProfile() {
   if (!me) return <div style={{ padding: '40px', color: 'var(--text-sub)' }}>Unable to retrieve profile specifications. Please check your credentials.</div>;
 
   return (
-    <div style={{ width: '100%', maxWidth: '1200px', display: 'flex', flexDirection: 'column', gap: '32px', padding:'24px', boxSizing:'border-box' }}>
-      <h1 style={{ fontSize: '32px', fontWeight: 900, color: 'var(--text-head)', margin: 0, letterSpacing: '-0.02em' }}>Account Registry</h1>
+    <div style={{ width: '100%', maxWidth: '1200px', display: 'flex', flexDirection: 'column', gap: '16px', padding:'0px 16px', boxSizing:'border-box', height: '100%', justifyContent: 'center' }}>
+      <h1 style={{ fontSize: '28px', fontWeight: 900, color: 'var(--text-head)', margin: 0, letterSpacing: '-0.02em' }}>Account Registry</h1>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '32px', alignItems: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '24px', alignItems: 'start' }}>
         
         {/* Left Column: Editable Details Form */}
         <form onSubmit={handleSave} className="glass-card" style={{
           background: 'var(--bg-panel)',
           border: '1px solid var(--border-main)',
-          borderRadius: '28px',
-          padding: '36px',
+          borderRadius: '24px',
+          padding: '24px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '20px',
+          gap: '16px',
           boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
           position: 'relative',
           overflow: 'hidden'
@@ -161,18 +161,18 @@ export default function UserProfile() {
         </form>
 
         {/* Right Column: Assigned Resource Telemetry */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
           {/* Personnel Identity Box */}
           <div className="glass-card" style={{
             background: 'var(--bg-panel)',
             border: '1px solid var(--border-main)',
-            borderRadius: '28px',
-            padding: '36px',
+            borderRadius: '24px',
+            padding: '24px',
             boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
             display: 'flex',
             alignItems: 'center',
-            gap: '24px'
+            gap: '16px'
           }}>
             <div style={{
               width: '72px', height: '72px', borderRadius: '20px',
@@ -195,12 +195,12 @@ export default function UserProfile() {
           <div className="glass-card" style={{
             background: 'var(--bg-panel)',
             border: '1px solid var(--border-main)',
-            borderRadius: '28px',
-            padding: '32px',
+            borderRadius: '24px',
+            padding: '24px',
             boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
             display:'flex',
             flexDirection:'column',
-            gap:'20px'
+            gap:'16px'
           }}>
             <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 800, color: 'var(--text-head)', display:'flex', alignItems:'center', gap:'8px' }}>
               🛡️ Verified Resource Custody

@@ -5,7 +5,7 @@ import DataFetcher from '@/components/DataFetcher';
 
 export default function VendorProfile({ params }) {
   const resolvedParams = use(params);
-  const vendorId = resolvedParams.id;
+  const vendorId = (resolvedParams as any).id;
 
   return (
     <DataFetcher
@@ -151,8 +151,8 @@ export default function VendorProfile({ params }) {
                           fontSize: '12px', fontWeight: 700, textDecoration: 'none', cursor: 'pointer',
                           display: 'inline-flex', transition: 'all 0.2s'
                         }}
-                        onMouseEnter={(e) => { e.target.style.background = '#F58220'; e.target.style.color = '#fff'; e.target.style.borderColor='transparent'; }}
-                        onMouseLeave={(e) => { e.target.style.background = 'var(--bg-input)'; e.target.style.color = 'var(--text-head)'; e.target.style.borderColor='var(--border-main)'; }}
+                        onMouseEnter={(e) => { (e.target as HTMLElement).style.background = '#F58220'; (e.target as HTMLElement).style.color = '#fff'; (e.target as HTMLElement).style.borderColor='transparent'; }}
+                        onMouseLeave={(e) => { (e.target as HTMLElement).style.background = 'var(--bg-input)'; (e.target as HTMLElement).style.color = 'var(--text-head)'; (e.target as HTMLElement).style.borderColor='var(--border-main)'; }}
                         >
                           View Detail Profile
                         </Link>

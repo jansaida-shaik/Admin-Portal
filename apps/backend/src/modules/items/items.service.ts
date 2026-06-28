@@ -90,5 +90,4 @@ class ItemsService {
     });
   }
 }
-
-module.exports = new ItemsService();
+export default new ItemsService();

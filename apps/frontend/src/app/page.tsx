@@ -136,8 +136,8 @@ export default function GlassInventoryDashboard() {
               gap: '4px',
               transition: 'opacity 0.2s',
             }}
-            onMouseEnter={(e) => e.currentTarget.style.opacity = 0.9}
-            onMouseLeave={(e) => e.currentTarget.style.opacity = 1}
+            onMouseEnter={(e: any) => e.currentTarget.style.opacity = "0.9"}
+            onMouseLeave={(e: any) => e.currentTarget.style.opacity = "1"}
             >
               <span style={{ fontSize: '14px', lineHeight: 0 }}>+</span> Procure Unit
             </button>

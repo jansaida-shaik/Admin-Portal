@@ -59,9 +59,9 @@ function normalizeMobileRecord(record) {
   };
 }
 
-module.exports = {
+export { 
   MOBILE_PROVIDER_OPTIONS,
   normalizeMobileProvider,
   normalizeMobileRecord,
   resolveMobileProvider
-};
+ };

@@ -1,7 +1,7 @@
-const authService = require('./auth.service');
+import authService from './auth.service';
 
 class AuthController {
-  async login(req, res) {
+  async login(req: any, res: any) {
     const { email, password } = req.body;
     
     if (!email || !password) {
@@ -26,10 +26,10 @@ class AuthController {
     }
   }
 
-  async logout(req, res) {
+  async logout(req: any, res: any) {
     res.clearCookie('token');
     res.json({ success: true });
   }
 }
 
-module.exports = new AuthController();
+export default new AuthController();

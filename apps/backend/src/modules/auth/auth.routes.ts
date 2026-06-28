@@ -1,9 +1,9 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const authController = require('./auth.controller');
-const asyncHandler = require('../../utils/asyncHandler');
+import authController from './auth.controller';
+import asyncHandler from '../../utils/asyncHandler';
 
 router.post('/login', asyncHandler(authController.login.bind(authController)));
 router.post('/logout', asyncHandler(authController.logout.bind(authController)));
 
-module.exports = router;
+export default router;

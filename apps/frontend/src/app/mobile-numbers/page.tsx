@@ -316,9 +316,16 @@ export default function MobileNumbers() {
                           {n.user.name}
                         </Link>
                       ) : (
-                        <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-sub)', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        <Link href={`/employees/lookup?name=${encodeURIComponent(n.assignedTo)}`} style={{
+                          display: 'block', fontSize: '11px', fontWeight: 600,
+                          color: 'var(--text-sub)', textDecoration: 'none',
+                          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                        }}
+                          onMouseEnter={e => e.currentTarget.style.color = 'var(--accent)'}
+                          onMouseLeave={e => e.currentTarget.style.color = 'var(--text-sub)'}
+                        >
                           {n.assignedTo}
-                        </span>
+                        </Link>
                       )
                     ) : (
                       <span style={{ fontSize: '10px', color: 'var(--text-sub)', fontStyle: 'italic', opacity: 0.45 }}>

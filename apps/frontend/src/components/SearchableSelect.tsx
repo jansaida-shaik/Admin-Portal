@@ -9,8 +9,8 @@ export default function SearchableSelect({
   searchPlaceholder = "Type to filter...",
   style = {},
   className = "",
-  renderOption
-}) {
+  renderOption = null
+}: any) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const containerRef = useRef(null);

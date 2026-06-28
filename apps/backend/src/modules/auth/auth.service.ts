@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 const { prisma } = require('../../prisma');
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -46,4 +46,4 @@ class AuthService {
   }
 }
 
-module.exports = new AuthService();
+export default new AuthService();

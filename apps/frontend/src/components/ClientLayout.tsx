@@ -88,10 +88,10 @@ export default function ClientLayout({ children }) {
   return (
     <div className="app-shell" style={{
       display: 'flex',
-      minHeight: '100vh',
+      height: '100vh',
       width: '100%',
       background: 'transparent',
-      overflow: 'clip',
+      overflow: 'hidden',
       color: 'var(--text-head)',
       fontFamily: 'Inter, system-ui, sans-serif',
       padding: isMobile ? '0' : '16px 20px 20px 20px',
@@ -172,14 +172,13 @@ export default function ClientLayout({ children }) {
           {/* Responsive Canvas viewport — scrollbar lives here, between topbar and pagination bar */}
           <main className="app-shell__main" style={{
             flex: 1,
-            overflowY: 'scroll',
+            overflowY: 'auto',
             overflowX: 'hidden',
             padding: isMobile ? '20px 16px 24px' : '32px 36px 32px 40px',
             boxSizing: 'border-box',
             display: 'flex',
             flexDirection: 'column',
             background: 'rgba(255,255,255,0.01)',
-            scrollbarGutter: 'stable',
           }}>
             {children}
           </main>
