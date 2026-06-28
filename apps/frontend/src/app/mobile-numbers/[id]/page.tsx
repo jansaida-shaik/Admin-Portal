@@ -149,18 +149,9 @@ export default function MobileDetails({ params }) {
     boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
   };
 
-  const inputStyle = {
-    width: '100%', 
-    padding: '12px 16px', 
-    background: 'var(--bg-input)', 
-    border: '1px solid var(--border-main)',
-    borderRadius: '12px', 
-    color: 'var(--text-head)', 
-    fontSize: '14px', 
-    marginTop: '8px', 
-    outline: 'none', 
-    boxSizing: 'border-box',
-    fontWeight: 600,
+  const inputStyle: React.CSSProperties = {
+    width: '100%', padding: '12px 16px', background: 'var(--bg-input)', border: '1px solid var(--border-main)',
+    borderRadius: '14px', color: 'var(--text-head)', fontSize: '14px', marginTop: '6px', outline: 'none', boxSizing: 'border-box', fontWeight: 600
   };
 
   return (

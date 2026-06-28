@@ -28,18 +28,9 @@ export default function NewMobileNumberPage() {
     fetchApi('/users?limit=500').then(res => setEmployees(res.data || [])).catch(() => {});
   }, []);
 
-  const inputStyle = {
-    width: '100%',
-    padding: '12px 16px',
-    background: 'var(--bg-input)',
-    border: '1px solid var(--border-main)',
-    borderRadius: '12px',
-    color: 'var(--text-head)',
-    fontSize: '14px',
-    marginTop: '8px',
-    outline: 'none',
-    boxSizing: 'border-box',
-    fontWeight: 600
+  const inputStyle: React.CSSProperties = {
+    width: '100%', padding: '14px 16px', background: 'var(--bg-input)', border: '1px solid var(--border-main)',
+    borderRadius: '12px', color: 'var(--text-head)', fontSize: '14px', marginTop: '8px', outline: 'none', boxSizing: 'border-box', fontWeight: 600
   };
 
   async function handleSubmit(event) {

@@ -130,7 +130,7 @@ export default function ServiceRequests() {
 
             <div>
               <label style={{ display: 'block', fontSize: '12px', fontWeight: 800, color: 'var(--text-sub)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>Detailed Event Log</label>
-              <textarea required rows="4" value={description} onChange={e=>setDescription(e.target.value)} placeholder="Outline technical context, steps to reproduce, or logistical requirements..." style={{
+              <textarea required rows={4} value={description} onChange={e=>setDescription(e.target.value)} placeholder="Outline technical context, steps to reproduce, or logistical requirements..." style={{
                 width: '100%', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border-main)', borderRadius: '12px', padding: '12px 16px', color: 'var(--text-head)', boxSizing:'border-box', fontSize:'14px', fontWeight:600, outline:'none', resize:'vertical', fontFamily:'inherit'
               }} />
             </div>

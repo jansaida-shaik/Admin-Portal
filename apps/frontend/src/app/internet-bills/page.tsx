@@ -210,7 +210,7 @@ export default function InternetBills() {
     boxSizing: 'border-box', fontWeight: 600
   };
 
-  const inputStyle = {
+  const inputStyle: React.CSSProperties = {
     width: '100%', padding: '12px', background: 'var(--bg-input)', border: '1px solid var(--border-main)',
     borderRadius: '14px', color: 'var(--text-head)', fontSize: '14px', marginTop: '6px', outline: 'none', boxSizing: 'border-box'
   };
@@ -586,7 +586,7 @@ export default function InternetBills() {
                   <input 
                     type="number" required step="0.01"
                     value={editForm.monthlyCost}
-                    onChange={e => setEditForm({ ...editForm, monthlyCost: e.target.value })}
+                    onChange={e => setEditForm({ ...editForm, monthlyCost: e.target.value ? Number(e.target.value) : 0 })}
                     style={inputStyle} 
                   />
                 </div>
