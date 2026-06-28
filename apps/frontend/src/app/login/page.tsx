@@ -43,8 +43,7 @@ export default function LoginPage() {
       minHeight: '100vh',
       display: 'flex',
       background: '#050508',
-      overflowY: 'auto',
-      overflowX: 'hidden',
+      overflow: 'hidden',
       position: 'relative',
       fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
     }}>
@@ -318,20 +317,28 @@ export default function LoginPage() {
         
         @media (max-width: 768px) {
           .login-container { flex-direction: column !important; overflow: hidden !important; }
-          div[style*="flex: 1"] { flex: unset !important; width: 100% !important; padding: 1.5rem 1.5rem 0.5rem 1.5rem !important; }
+          div[style*="flex: 1"] { flex: unset !important; width: 100% !important; padding: 1rem 1.5rem 0.5rem 1.5rem !important; }
           
           /* Branding Panel Compression */
-          div[style*="marginBottom: '2.5rem'"] { margin-bottom: 1rem !important; }
+          div[style*="marginBottom: '2.5rem'"] { margin-bottom: 0.5rem !important; }
           div[style*="marginBottom: '3rem'"] { display: none !important; margin-bottom: 0 !important; }
           h1[style*="fontSize: '2rem'"] { font-size: 1.5rem !important; margin-bottom: 0 !important; }
           img[alt="Codegnan Logo"] { width: 140px !important; height: auto !important; }
           
           /* Form Panel Compression */
-          h2[style*="fontSize: '2rem'"] { font-size: 1.5rem !important; }
+          h2[style*="fontSize: '2rem'"] { font-size: 1.25rem !important; margin-bottom: 0.25rem !important; }
           p[style*="marginTop: '2rem'"] { margin-top: 1rem !important; font-size: 0.7rem !important; }
           form { gap: 0.75rem !important; }
           input { padding: 0.75rem 1rem !important; }
           button[id="login-submit"] { padding: 0.75rem !important; margin-top: 0 !important; }
+        }
+        
+        /* Tablet Landscape & Short Desktop Compression */
+        @media (min-width: 769px) and (max-height: 900px) {
+          div[style*="flex: 1"] { padding: 1.5rem 2rem !important; }
+          div[style*="marginBottom: '2.5rem'"] { margin-bottom: 1.25rem !important; }
+          div[style*="marginBottom: '3rem'"] { margin-bottom: 1.25rem !important; }
+          p[style*="marginTop: '2rem'"] { margin-top: 1rem !important; }
         }
       `}</style>
     </div>

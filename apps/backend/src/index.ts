@@ -22,6 +22,12 @@ if (!JWT_SECRET) {
   console.error("FATAL ERROR: JWT_SECRET environment variable is not set.");
   process.exit(1);
 }
+
+// Monkeypatch BigInt to JSON serialize as string
+(BigInt.prototype as any).toJSON = function () {
+  return this.toString();
+};
+
 app.use(cors({
   origin: 'http://localhost:3000',
   credentials: true
@@ -922,7 +928,7 @@ app.post('/api/internet-bills', authenticate, asyncHandler(async (req: any, res:
       provider,
       planDetails,
       speed: speed ? parseInt(speed) : null,
-      monthlyCost: parseFloat(monthlyCost),
+      monthlyCost: monthlyCost ? parseFloat(monthlyCost) : null,
       dueDate: dueDate ? new Date(dueDate) : null,
       attachments: attachments || null,
       locationId: locationId ? BigInt(locationId) : null,
