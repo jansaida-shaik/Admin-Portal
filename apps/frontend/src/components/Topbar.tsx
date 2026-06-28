@@ -103,7 +103,7 @@ export default function Topbar({ isMobile = false, onOpenSidebar }) {
       </div>
 
       {/* 2. Action & User Controls Row */}
-      <div className="topbar-actions" style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: isMobile ? '10px' : '16px', marginLeft: isMobile ? 0 : 'auto', width: isMobile ? '100%' : 'auto' }}>
+      <div className="topbar-actions" style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: isMobile ? '12px' : '16px', flexShrink: 0 }}>
         
         {/* Alert Bell Wrapper for Positioning */}
         <div style={{ position: 'relative' }} ref={dropdownRef}>

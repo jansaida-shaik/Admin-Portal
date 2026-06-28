@@ -43,7 +43,8 @@ export default function LoginPage() {
       minHeight: '100vh',
       display: 'flex',
       background: '#050508',
-      overflow: 'hidden',
+      overflowY: 'auto',
+      overflowX: 'hidden',
       position: 'relative',
       fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
     }}>
@@ -314,9 +315,23 @@ export default function LoginPage() {
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
         .login-container { flex-direction: row; }
+        
         @media (max-width: 768px) {
-          .login-container { flex-direction: column !important; overflow-y: auto !important; }
-          div[style*="flex: 1"] { flex: unset !important; width: 100% !important; padding: 2rem !important; }
+          .login-container { flex-direction: column !important; overflow: hidden !important; }
+          div[style*="flex: 1"] { flex: unset !important; width: 100% !important; padding: 1.5rem 1.5rem 0.5rem 1.5rem !important; }
+          
+          /* Branding Panel Compression */
+          div[style*="marginBottom: '2.5rem'"] { margin-bottom: 1rem !important; }
+          div[style*="marginBottom: '3rem'"] { display: none !important; margin-bottom: 0 !important; }
+          h1[style*="fontSize: '2rem'"] { font-size: 1.5rem !important; margin-bottom: 0 !important; }
+          img[alt="Codegnan Logo"] { width: 140px !important; height: auto !important; }
+          
+          /* Form Panel Compression */
+          h2[style*="fontSize: '2rem'"] { font-size: 1.5rem !important; }
+          p[style*="marginTop: '2rem'"] { margin-top: 1rem !important; font-size: 0.7rem !important; }
+          form { gap: 0.75rem !important; }
+          input { padding: 0.75rem 1rem !important; }
+          button[id="login-submit"] { padding: 0.75rem !important; margin-top: 0 !important; }
         }
       `}</style>
     </div>
