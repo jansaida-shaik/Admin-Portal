@@ -329,23 +329,23 @@ export default function LoginPage() {
         
         @media (max-width: 768px) {
           .login-container { flex-direction: column !important; overflow: hidden !important; height: 100dvh !important; }
-          .branding-panel { flex: unset !important; width: 100% !important; padding: 1.5rem 1.5rem 0.5rem 1.5rem !important; justify-content: center !important; }
-          .form-panel { flex: unset !important; width: 100% !important; padding: 0.5rem 1.5rem 1.5rem 1.5rem !important; justify-content: center !important; }
+          .branding-panel { flex: unset !important; width: 100% !important; padding: 2rem 1.5rem 1rem 1.5rem !important; justify-content: center !important; }
+          .form-panel { flex: unset !important; width: 100% !important; padding: 1rem 1.5rem 2rem 1.5rem !important; justify-content: center !important; }
           
           /* Branding Panel Compression */
-          .logo-container { margin-bottom: 0.5rem !important; padding: 12px !important; }
-          .branding-p { margin-bottom: 0 !important; font-size: 0.8rem !important; line-height: 1.2 !important; }
-          .branding-h1 { font-size: 1.3rem !important; margin-bottom: 0.25rem !important; }
+          .logo-container { margin-bottom: 1rem !important; padding: 12px !important; }
+          .branding-p { margin-bottom: 0.5rem !important; font-size: 0.8rem !important; line-height: 1.3 !important; }
+          .branding-h1 { font-size: 1.4rem !important; margin-bottom: 0.5rem !important; }
           .branding-img { width: 130px !important; height: auto !important; }
           
           /* Form Panel Compression */
-          .login-h2 { font-size: 1.15rem !important; margin-bottom: 0 !important; }
-          .login-subtitle { margin-top: 0.25rem !important; margin-bottom: 0.5rem !important; font-size: 0.75rem !important; }
-          .login-header-group { margin-bottom: 0.75rem !important; }
-          form { gap: 0.6rem !important; }
-          input { padding: 0.6rem 1rem !important; font-size: 0.9rem !important; height: auto !important; }
-          button[id="login-submit"] { padding: 0.6rem !important; margin-top: 0 !important; height: auto !important; }
-          p[style*="marginTop: '2rem'"] { margin-top: 0.75rem !important; font-size: 0.7rem !important; }
+          .login-h2 { font-size: 1.25rem !important; margin-bottom: 0.25rem !important; }
+          .login-subtitle { margin-top: 0.25rem !important; margin-bottom: 1rem !important; font-size: 0.8rem !important; }
+          .login-header-group { margin-bottom: 1.25rem !important; }
+          form { gap: 1rem !important; }
+          input { padding: 0.75rem 1rem !important; font-size: 0.95rem !important; height: auto !important; }
+          button[id="login-submit"] { padding: 0.75rem !important; margin-top: 0.5rem !important; height: auto !important; }
+          p[style*="marginTop: '2rem'"] { margin-top: 1.5rem !important; font-size: 0.75rem !important; }
         }
         
         /* Tablet Landscape & Short Desktop Compression */
