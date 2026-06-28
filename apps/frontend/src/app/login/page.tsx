@@ -64,21 +64,6 @@ export default function LoginPage() {
       }} />
 
       {/* ── LEFT PANEL – Branding ── */}
-      <div style={{
-        flex: '1',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '3rem',
-        position: 'relative',
-        borderRight: '1px solid rgba(255,255,255,0.05)',
-        background: 'linear-gradient(135deg, rgba(15,15,25,0.95) 0%, rgba(8,8,15,0.98) 100%)',
-      }}>
-        {/* Decorative grid lines */}
-        <div style={{
-          position: 'absolute', inset: 0, opacity: 0.03,
-          backgroundImage: 'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)',
       <div className="branding-panel" style={{
         flex: '1',
         display: 'flex',
@@ -88,6 +73,8 @@ export default function LoginPage() {
         padding: '3rem',
         position: 'relative',
         zIndex: 1,
+        borderRight: '1px solid rgba(255,255,255,0.05)',
+        background: 'linear-gradient(135deg, rgba(15,15,25,0.95) 0%, rgba(8,8,15,0.98) 100%)',
       }}>
         {/* Subtle grid texture overlay for left panel */}
         <div style={{
