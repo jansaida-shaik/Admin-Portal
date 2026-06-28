@@ -272,7 +272,7 @@ export default function InternetBills() {
       </div>
 
       {/* 📊 Network Infrastructure Metrics Header */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: 'Total Assets', val: total, sub: 'Connected ISP Nodes', col: '#0B316F' },
           { label: 'Operational', val: aggStats.loading ? '...' : aggStats.active, sub: 'Active corporate pipes', col: '#10b981' },

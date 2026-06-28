@@ -105,7 +105,7 @@ export default function VendorsDirectory() {
       </div>
 
       {/* 📊 Supply Chain & Vendor Analytics Dashboard */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: 'ENROLLED VENDORS', val: total, sub: 'Verified supply nodes', col: '#245fb4' },
           { label: 'TOTAL ITEM COVERAGE', val: aggStats.loading ? '...' : aggStats.itemCoverage, sub: 'Procured unique line items', col: '#10b981' },

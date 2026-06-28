@@ -179,7 +179,7 @@ export default function AssetDirectory() {
       </div>
 
       {/* 📊 Global Asset & Inventory Metrics Dashboard */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: 'TOTAL SKUS', val: total, sub: 'Unique catalog lines', col: '#0B316F' },
           { label: 'ACTIVE STOCK UNITS', val: aggStats.loading ? '...' : aggStats.totalQty, sub: 'Aggregated units globally', col: '#10b981' },
