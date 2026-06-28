@@ -88,7 +88,7 @@ export default function ClientLayout({ children }) {
   return (
     <div className="app-shell" style={{
       display: 'flex',
-      height: '100vh',
+      height: '100dvh',
       width: '100%',
       background: 'transparent',
       overflow: 'hidden',
@@ -96,6 +96,8 @@ export default function ClientLayout({ children }) {
       fontFamily: 'Inter, system-ui, sans-serif',
       padding: isMobile ? '0' : '16px 20px 20px 20px',
       boxSizing: 'border-box',
+      position: 'fixed',
+      inset: 0,
     }}>
       <div className="glass-frame app-shell__frame" style={{
         flex: 1,
