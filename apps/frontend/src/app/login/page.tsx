@@ -39,7 +39,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{
+    <div className="login-container" style={{
       minHeight: '100vh',
       display: 'flex',
       background: '#050508',
@@ -313,8 +313,10 @@ export default function LoginPage() {
 
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
+        .login-container { flex-direction: row; }
         @media (max-width: 768px) {
-          div[style*="flex: 1"] { flex: unset !important; width: 100% !important; }
+          .login-container { flex-direction: column !important; overflow-y: auto !important; }
+          div[style*="flex: 1"] { flex: unset !important; width: 100% !important; padding: 2rem !important; }
         }
       `}</style>
     </div>
