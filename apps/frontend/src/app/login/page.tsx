@@ -334,9 +334,9 @@ export default function LoginPage() {
           
           /* Branding Panel Compression */
           .logo-container { margin-bottom: 0.5rem !important; padding: 12px !important; }
-          .branding-p { display: none !important; margin-bottom: 0 !important; }
-          .branding-h1 { font-size: 1.3rem !important; margin-bottom: 0 !important; }
-          .branding-img { width: 110px !important; height: auto !important; }
+          .branding-p { margin-bottom: 0 !important; font-size: 0.8rem !important; line-height: 1.2 !important; }
+          .branding-h1 { font-size: 1.3rem !important; margin-bottom: 0.25rem !important; }
+          .branding-img { width: 130px !important; height: auto !important; }
           
           /* Form Panel Compression */
           .login-h2 { font-size: 1.15rem !important; margin-bottom: 0 !important; }
