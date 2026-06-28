@@ -353,7 +353,6 @@ export default function LoginPage() {
           .login-container { overflow: hidden !important; height: 100dvh !important; }
           .branding-panel, .form-panel { padding: 1.5rem 2rem !important; justify-content: center !important; }
           .logo-container { margin-bottom: 1rem !important; padding: 16px !important; }
-          .branding-img { width: 140px !important; }
           .login-header-group { margin-bottom: 1rem !important; }
           .branding-p { margin-bottom: 1rem !important; font-size: 0.9rem !important; }
           .login-subtitle { margin-top: 0.25rem !important; }
