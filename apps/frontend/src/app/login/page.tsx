@@ -40,14 +40,11 @@ export default function LoginPage() {
 
   return (
     <div className="login-container" style={{
-      height: '100dvh',
-      maxHeight: '100dvh',
-      width: '100vw',
+      minHeight: '100vh',
       display: 'flex',
       background: '#050508',
       overflow: 'hidden',
-      position: 'fixed',
-      inset: 0,
+      position: 'relative',
       fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
     }}>
       {/* Ambient background glows */}
@@ -320,36 +317,37 @@ export default function LoginPage() {
         .login-container { flex-direction: row; }
         
         @media (max-width: 768px) {
-          .login-container { flex-direction: column !important; overflow: hidden !important; }
-          .branding-panel { flex: unset !important; width: 100% !important; padding: 1rem 1rem 0 1rem !important; height: auto !important; }
-          .form-panel { flex: unset !important; width: 100% !important; padding: 0.5rem 1.5rem !important; height: auto !important; }
+          .login-container { flex-direction: column !important; overflow: hidden !important; height: 100dvh !important; }
+          .branding-panel { flex: unset !important; width: 100% !important; padding: 1.5rem 1.5rem 0.5rem 1.5rem !important; justify-content: center !important; }
+          .form-panel { flex: unset !important; width: 100% !important; padding: 0.5rem 1.5rem 1.5rem 1.5rem !important; justify-content: center !important; }
           
           /* Branding Panel Compression */
-          .logo-container { margin-bottom: 0.25rem !important; padding: 12px !important; }
+          .logo-container { margin-bottom: 0.5rem !important; padding: 12px !important; }
           .branding-p { display: none !important; margin-bottom: 0 !important; }
-          .branding-h1 { font-size: 1.25rem !important; margin-bottom: 0 !important; }
-          .branding-img { width: 90px !important; height: auto !important; }
+          .branding-h1 { font-size: 1.3rem !important; margin-bottom: 0 !important; }
+          .branding-img { width: 110px !important; height: auto !important; }
           
           /* Form Panel Compression */
           .login-h2 { font-size: 1.15rem !important; margin-bottom: 0 !important; }
-          .login-subtitle { margin-top: 0.25rem !important; margin-bottom: 0.5rem !important; font-size: 0.7rem !important; }
-          .login-header-group { margin-bottom: 0.5rem !important; }
-          form { gap: 0.5rem !important; }
-          input { padding: 0.6rem 1rem !important; height: 40px !important; font-size: 0.9rem !important; }
-          button[id="login-submit"] { padding: 0.6rem !important; margin-top: 0 !important; height: 40px !important; }
-          p[style*="marginTop: '2rem'"] { margin-top: 0.75rem !important; font-size: 0.65rem !important; }
+          .login-subtitle { margin-top: 0.25rem !important; margin-bottom: 0.5rem !important; font-size: 0.75rem !important; }
+          .login-header-group { margin-bottom: 0.75rem !important; }
+          form { gap: 0.6rem !important; }
+          input { padding: 0.6rem 1rem !important; font-size: 0.9rem !important; height: auto !important; }
+          button[id="login-submit"] { padding: 0.6rem !important; margin-top: 0 !important; height: auto !important; }
+          p[style*="marginTop: '2rem'"] { margin-top: 0.75rem !important; font-size: 0.7rem !important; }
         }
         
         /* Tablet Landscape & Short Desktop Compression */
         @media (min-width: 769px) and (max-height: 900px) {
-          .branding-panel, .form-panel { padding: 1.5rem 2rem !important; }
+          .login-container { overflow: hidden !important; height: 100dvh !important; }
+          .branding-panel, .form-panel { padding: 1.5rem 2rem !important; justify-content: center !important; }
           .logo-container { margin-bottom: 1rem !important; padding: 16px !important; }
           .branding-img { width: 140px !important; }
           .login-header-group { margin-bottom: 1rem !important; }
-          .branding-p { margin-bottom: 1rem !important; display: none !important; }
+          .branding-p { margin-bottom: 1rem !important; font-size: 0.9rem !important; }
           .login-subtitle { margin-top: 0.25rem !important; }
-          form { gap: 0.75rem !important; }
-          p[style*="marginTop: '2rem'"] { margin-top: 0.75rem !important; }
+          form { gap: 0.6rem !important; }
+          p[style*="marginTop: '2rem'"] { margin-top: 1rem !important; }
         }
       `}</style>
     </div>
