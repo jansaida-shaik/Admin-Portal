@@ -5,5 +5,10 @@
       "source": "/api/(.*)",
       "destination": "/api/index.js"
     }
-  ]
+  ],
+  "env": {
+    "DATABASE_URL": "postgres://bfd03ca71b536d5d9d9df73d17e7594fd8a5288eb294074abdf47f624c0f6d94:sk_23VswyJwAZ4wB5wTBbxVw@pooled.db.prisma.io:5432/postgres?sslmode=require",
+    "POSTGRES_URL": "postgres://bfd03ca71b536d5d9d9df73d17e7594fd8a5288eb294074abdf47f624c0f6d94:sk_23VswyJwAZ4wB5wTBbxVw@pooled.db.prisma.io:5432/postgres?sslmode=require",
+    "PRISMA_DATABASE_URL": "postgres://bfd03ca71b536d5d9d9df73d17e7594fd8a5288eb294074abdf47f624c0f6d94:sk_23VswyJwAZ4wB5wTBbxVw@pooled.db.prisma.io:5432/postgres?sslmode=require"
+  }
 }
