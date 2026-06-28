@@ -79,12 +79,25 @@ export default function LoginPage() {
         <div style={{
           position: 'absolute', inset: 0, opacity: 0.03,
           backgroundImage: 'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)',
-          backgroundSize: '48px 48px',
-          pointerEvents: 'none',
+      <div className="branding-panel" style={{
+        flex: '1',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '3rem',
+        position: 'relative',
+        zIndex: 1,
+      }}>
+        {/* Subtle grid texture overlay for left panel */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          backgroundSize: '40px 40px',
+          backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px)',
+          opacity: 0.5, pointerEvents: 'none',
         }} />
 
-        {/* Logo card */}
-        <div style={{
+        <div className="logo-container" style={{
           position: 'relative',
           marginBottom: '2.5rem',
           display: 'inline-flex',
@@ -111,12 +124,13 @@ export default function LoginPage() {
               width={220}
               height={80}
               style={{ display: 'block', objectFit: 'contain' }}
+              className="branding-img"
               priority
             />
           </div>
         </div>
 
-        <h1 style={{
+        <h1 className="branding-h1" style={{
           fontSize: '2rem',
           fontWeight: 700,
           color: '#ffffff',
@@ -127,7 +141,7 @@ export default function LoginPage() {
           Inventory Portal
         </h1>
 
-        <p style={{
+        <p className="branding-p" style={{
           color: 'rgba(148,163,184,0.8)',
           fontSize: '1rem',
           textAlign: 'center',
@@ -142,7 +156,7 @@ export default function LoginPage() {
       </div>
 
       {/* ── RIGHT PANEL – Sign In ── */}
-      <div style={{
+      <div className="form-panel" style={{
         flex: '1',
         display: 'flex',
         flexDirection: 'column',
@@ -153,14 +167,14 @@ export default function LoginPage() {
       }}>
         <div style={{ width: '100%', maxWidth: '420px' }}>
           {/* Header */}
-          <div style={{ marginBottom: '2.5rem' }}>
+          <div className="login-header-group" style={{ marginBottom: '2.5rem' }}>
             <p style={{ color: '#3b82f6', fontSize: '0.8rem', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
               Welcome back
             </p>
-            <h2 style={{ fontSize: '2rem', fontWeight: 700, color: '#ffffff', letterSpacing: '-0.03em', margin: 0 }}>
+            <h2 className="login-h2" style={{ fontSize: '2rem', fontWeight: 700, color: '#ffffff', letterSpacing: '-0.03em', margin: 0 }}>
               Sign in to your account
             </h2>
-            <p style={{ color: 'rgba(148,163,184,0.7)', fontSize: '0.9rem', marginTop: '0.5rem' }}>
+            <p className="login-subtitle" style={{ color: 'rgba(148,163,184,0.7)', fontSize: '0.9rem', marginTop: '0.5rem' }}>
               Enter your credentials to continue
             </p>
           </div>
@@ -317,17 +331,18 @@ export default function LoginPage() {
         
         @media (max-width: 768px) {
           .login-container { flex-direction: column !important; overflow: hidden !important; }
-          div[style*="flex: 1"] { flex: unset !important; width: 100% !important; padding: 1rem 1.5rem 0.5rem 1.5rem !important; }
+          .branding-panel, .form-panel { flex: unset !important; width: 100% !important; padding: 1rem 1.5rem 0.5rem 1.5rem !important; }
           
           /* Branding Panel Compression */
-          div[style*="marginBottom: '2.5rem'"] { margin-bottom: 0.5rem !important; }
-          div[style*="marginBottom: '3rem'"] { display: none !important; margin-bottom: 0 !important; }
-          h1[style*="fontSize: '2rem'"] { font-size: 1.5rem !important; margin-bottom: 0 !important; }
-          img[alt="Codegnan Logo"] { width: 140px !important; height: auto !important; }
+          .logo-container { margin-bottom: 0.5rem !important; }
+          .branding-p { display: none !important; margin-bottom: 0 !important; }
+          .branding-h1 { font-size: 1.5rem !important; margin-bottom: 0 !important; }
+          .branding-img { width: 140px !important; height: auto !important; }
           
           /* Form Panel Compression */
-          h2[style*="fontSize: '2rem'"] { font-size: 1.25rem !important; margin-bottom: 0.25rem !important; }
-          p[style*="marginTop: '2rem'"] { margin-top: 1rem !important; font-size: 0.7rem !important; }
+          .login-h2 { font-size: 1.2rem !important; margin-bottom: 0.25rem !important; }
+          .login-subtitle { margin-top: 0.25rem !important; font-size: 0.7rem !important; }
+          .login-header-group { margin-bottom: 1rem !important; }
           form { gap: 0.75rem !important; }
           input { padding: 0.75rem 1rem !important; }
           button[id="login-submit"] { padding: 0.75rem !important; margin-top: 0 !important; }
@@ -335,10 +350,11 @@ export default function LoginPage() {
         
         /* Tablet Landscape & Short Desktop Compression */
         @media (min-width: 769px) and (max-height: 900px) {
-          div[style*="flex: 1"] { padding: 1.5rem 2rem !important; }
-          div[style*="marginBottom: '2.5rem'"] { margin-bottom: 1.25rem !important; }
-          div[style*="marginBottom: '3rem'"] { margin-bottom: 1.25rem !important; }
-          p[style*="marginTop: '2rem'"] { margin-top: 1rem !important; }
+          .branding-panel, .form-panel { padding: 1.5rem 2rem !important; }
+          .logo-container { margin-bottom: 1.25rem !important; }
+          .login-header-group { margin-bottom: 1.25rem !important; }
+          .branding-p { margin-bottom: 1.25rem !important; }
+          .login-subtitle { margin-top: 0.25rem !important; }
         }
       `}</style>
     </div>
