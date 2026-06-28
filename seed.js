@@ -1,4 +1,5 @@
-import { prisma } from './src/prisma';
+const { PrismaClient } = require('./apps/backend/node_modules/@prisma/client');
+const prisma = new PrismaClient({});
 
 async function seed() {
   try {
