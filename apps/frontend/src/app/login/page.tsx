@@ -315,6 +315,15 @@ export default function LoginPage() {
       </div>
 
       <style>{`
+        /* ABSOLUTE SCROLL LOCK FOR ENTIRE WINDOW */
+        html, body { 
+          overflow: hidden !important; 
+          height: 100% !important; 
+          width: 100% !important; 
+          position: fixed !important; 
+          touch-action: none !important; 
+        }
+        
         @keyframes spin { to { transform: rotate(360deg); } }
         .login-container { flex-direction: row; }
         
