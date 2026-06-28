@@ -40,11 +40,13 @@ export default function LoginPage() {
 
   return (
     <div className="login-container" style={{
-      minHeight: '100vh',
+      height: '100dvh',
+      width: '100vw',
+      position: 'fixed',
+      inset: 0,
       display: 'flex',
       background: '#050508',
       overflow: 'hidden',
-      position: 'relative',
       fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
     }}>
       {/* Ambient background glows */}
