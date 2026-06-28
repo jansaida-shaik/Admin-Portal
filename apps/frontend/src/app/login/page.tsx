@@ -286,8 +286,8 @@ export default function LoginPage() {
                 transition: 'all 0.2s',
                 letterSpacing: '0.01em',
               }}
-              onMouseEnter={e => { if (!loading) { e.target.style.boxShadow = '0 0 40px rgba(59,130,246,0.55)'; e.target.style.transform = 'translateY(-1px)'; } }}
-              onMouseLeave={e => { e.target.style.boxShadow = '0 0 30px rgba(59,130,246,0.35)'; e.target.style.transform = 'none'; }}
+              onMouseEnter={e => { if (!loading) { e.currentTarget.style.boxShadow = '0 0 40px rgba(59,130,246,0.55)'; e.currentTarget.style.transform = 'translateY(-1px)'; } }}
+              onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 0 30px rgba(59,130,246,0.35)'; e.currentTarget.style.transform = 'none'; }}
             >
               {loading ? (
                 <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
