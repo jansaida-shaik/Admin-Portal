@@ -149,7 +149,7 @@ export default function MobileNumbers() {
       </div>
 
       {/* ── Filter Bar ── */}
-      <div className="mobile-filter-bar" style={{ display: 'flex', gap: '12px', minHeight: '44px', alignItems: 'center', flexWrap: 'wrap' }}>
+      <div className="responsive-filter-bar" style={{ display: 'flex', gap: '12px', minHeight: '44px', alignItems: 'center', flexWrap: 'wrap' }}>
         <div style={{ position: 'relative', flex: '1', minWidth: '240px', maxWidth: '360px', height: '100%' }}>
           <input type="text" placeholder="Search numbers, SIM IDs, assignees…"
             value={search} onChange={e => { setSearch(e.target.value); setPage(1); }}

@@ -108,7 +108,18 @@ export default function EmployeeAssets({ params }) {
             </span>
           </div>
           <div style={{ fontSize: '15px', color: 'var(--text-sub)', marginTop: '8px', fontWeight:600, display:'flex', alignItems:'center', gap:'8px', flexWrap:'wrap' }}>
-            <span>{employee.email}</span>
+            {(() => {
+              const isPhoneEmail = employee.email?.match(/^(\d{10,})@codegnan\.com$/i);
+              const phone = isPhoneEmail ? isPhoneEmail[1] : (employee.phone || null);
+              const displayEmail = isPhoneEmail ? '' : employee.email;
+              return (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  {displayEmail && <span>✉️ {displayEmail}</span>}
+                  {displayEmail && phone && <span style={{opacity:0.4}}>•</span>}
+                  {phone && <span>📞 {phone}</span>}
+                </div>
+              );
+            })()}
             <span style={{opacity:0.4}}>•</span>
             <span>📍 <strong style={{color:'var(--text-head)'}}>Location:</strong> {employee.city || employee.loc || 'Global'}</span>
             <span style={{opacity:0.4}}>•</span>

@@ -208,6 +208,28 @@ body.light-mode ::-webkit-scrollbar-thumb:hover {
     padding-left: 16px;
     padding-right: 16px;
   }
+
+  .responsive-header-row {
+    flex-wrap: wrap !important;
+    gap: 16px !important;
+    align-items: flex-start !important;
+  }
+  
+  .responsive-filter-bar {
+    flex-wrap: wrap !important;
+    height: auto !important;
+  }
+  
+  .responsive-filter-bar > * {
+    flex: 1 1 calc(50% - 12px) !important;
+    width: auto !important;
+    min-width: 140px !important;
+    height: 42px !important;
+  }
+
+  .responsive-filter-bar > input[type="text"] {
+    flex: 1 1 100% !important;
+  }
 }
 
 @media (max-width: 560px) {

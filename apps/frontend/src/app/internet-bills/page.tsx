@@ -309,7 +309,7 @@ export default function InternetBills() {
       </div>
 
       {/* 🛠️ Premium Search & Filter Utilities Bar */}
-      <div style={{ display: 'flex', gap: '12px', height: '44px', alignItems: 'center', flexWrap: 'wrap' }}>
+      <div className="responsive-filter-bar" style={{ display: 'flex', gap: '12px', height: '44px', alignItems: 'center', flexWrap: 'wrap' }}>
         <input
           type="text"
           placeholder="Search ISP / Provider..."

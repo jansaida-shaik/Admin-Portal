@@ -111,7 +111,7 @@ export default function Directory() {
 
   return (
     <div style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: '32px', boxSizing: 'border-box' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="responsive-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{
             fontSize: '28px',
@@ -175,7 +175,7 @@ export default function Directory() {
         ))}
       </div>
 
-      <div style={{ display: 'flex', gap: '12px', height: '42px', alignItems: 'center' }}>
+      <div className="responsive-filter-bar" style={{ display: 'flex', gap: '12px', height: '42px', alignItems: 'center' }}>
         <input
           type="text"
           placeholder="Find Employee"
@@ -283,7 +283,27 @@ export default function Directory() {
                     </div>
                     <div>
                       <div style={{ fontWeight: 600, color: 'var(--text-head)', fontSize: '15px' }}>{emp.name}</div>
-                      <div style={{ color: 'var(--text-sub)', fontSize: '13px', marginTop: '2px' }}>{emp.email}</div>
+                      {(() => {
+                        const isPhoneEmail = emp.email.match(/^(\d{10,})@codegnan\.com$/i);
+                        const phone = isPhoneEmail ? isPhoneEmail[1] : (emp.phone || null);
+                        const displayEmail = isPhoneEmail ? '' : emp.email;
+                        return (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '6px' }}>
+                            {displayEmail && (
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-sub)', fontSize: '13px' }}>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                {displayEmail}
+                              </div>
+                            )}
+                            {phone && (
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-sub)', fontSize: '13px' }}>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                                {phone}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })()}
                     </div>
                   </div>
 

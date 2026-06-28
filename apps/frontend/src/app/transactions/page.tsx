@@ -108,7 +108,7 @@ export default function TransactionHistory() {
         ))}
       </div>
 
-      <div style={{ display: 'flex', gap: '12px', height: '42px', alignItems: 'center' }}>
+      <div className="responsive-filter-bar" style={{ display: 'flex', gap: '12px', height: '42px', alignItems: 'center' }}>
         <input
           type="text"
           placeholder="Search ledger description..."
