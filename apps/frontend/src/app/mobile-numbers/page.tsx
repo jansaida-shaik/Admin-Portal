@@ -125,7 +125,7 @@ export default function MobileNumbers() {
       </div>
 
       {/* ── Stat Cards ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '16px' }}>
+      <div className="metrics-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '16px' }}>
         {[
           { label: 'Total Connected',  val: total, sub: 'SIM units registered', col: '#0B316F' },
           { label: 'Assigned Lines',   val: aggStats.loading ? '…' : aggStats.assigned, sub: 'Active in-use nodes', col: '#F58220' },

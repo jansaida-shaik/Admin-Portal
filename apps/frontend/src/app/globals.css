@@ -209,6 +209,10 @@ body.light-mode ::-webkit-scrollbar-thumb:hover {
     padding-right: 16px;
   }
 
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
   .responsive-header-row {
     flex-wrap: wrap !important;
     gap: 16px !important;

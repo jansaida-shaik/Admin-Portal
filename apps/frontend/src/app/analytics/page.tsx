@@ -151,7 +151,7 @@ export default function AnalyticsDashboard() {
       </div>
 
       {/* KPM Metrics Bar */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px' }}>
+      <div className="metrics-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px' }}>
         {stats.map((stat, i) => (
           <div key={i} className="glass-card" style={{ 
             borderRadius: '20px', 

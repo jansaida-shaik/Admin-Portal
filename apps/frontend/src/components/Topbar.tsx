@@ -35,18 +35,18 @@ export default function Topbar({ isMobile = false, onOpenSidebar }) {
     <div className="topbar-shell" style={{
       height: '100%',
       display: 'flex',
-      alignItems: isMobile ? 'stretch' : 'center',
+      alignItems: 'center',
       justifyContent: 'space-between',
-      flexWrap: isMobile ? 'wrap' : 'nowrap',
-      gap: isMobile ? '12px' : '16px',
+      flexWrap: 'nowrap',
+      gap: isMobile ? '8px' : '16px',
       padding: isMobile ? '12px 16px' : '0 32px',
       boxSizing: 'border-box',
     }}>
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        gap: '12px',
-        flex: isMobile ? '1 1 100%' : '1 1 auto',
+        gap: isMobile ? '8px' : '12px',
+        flex: '1 1 auto',
         minWidth: 0,
       }}>
         {isMobile && (

@@ -152,7 +152,7 @@ export default function Directory() {
       </div>
 
       {/* 📊 Personnel & Employee Custody Analytics Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+      <div className="metrics-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
         {[
           { label: 'TOTAL PERSONNEL', val: total, sub: 'Active registered accounts', col: '#F58220' },
           { label: 'SYSTEM ADMINISTRATORS', val: aggStats.loading ? '...' : aggStats.admins, sub: 'Elevated platform access', col: '#ef4444' },
