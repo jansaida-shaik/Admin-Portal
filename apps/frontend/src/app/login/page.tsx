@@ -40,11 +40,14 @@ export default function LoginPage() {
 
   return (
     <div className="login-container" style={{
-      minHeight: '100vh',
+      height: '100dvh',
+      maxHeight: '100dvh',
+      width: '100vw',
       display: 'flex',
       background: '#050508',
       overflow: 'hidden',
-      position: 'relative',
+      position: 'fixed',
+      inset: 0,
       fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
     }}>
       {/* Ambient background glows */}
@@ -318,30 +321,35 @@ export default function LoginPage() {
         
         @media (max-width: 768px) {
           .login-container { flex-direction: column !important; overflow: hidden !important; }
-          .branding-panel, .form-panel { flex: unset !important; width: 100% !important; padding: 1rem 1.5rem 0.5rem 1.5rem !important; }
+          .branding-panel { flex: unset !important; width: 100% !important; padding: 1rem 1rem 0 1rem !important; height: auto !important; }
+          .form-panel { flex: unset !important; width: 100% !important; padding: 0.5rem 1.5rem !important; height: auto !important; }
           
           /* Branding Panel Compression */
-          .logo-container { margin-bottom: 0.5rem !important; }
+          .logo-container { margin-bottom: 0.25rem !important; padding: 12px !important; }
           .branding-p { display: none !important; margin-bottom: 0 !important; }
-          .branding-h1 { font-size: 1.5rem !important; margin-bottom: 0 !important; }
-          .branding-img { width: 140px !important; height: auto !important; }
+          .branding-h1 { font-size: 1.25rem !important; margin-bottom: 0 !important; }
+          .branding-img { width: 90px !important; height: auto !important; }
           
           /* Form Panel Compression */
-          .login-h2 { font-size: 1.2rem !important; margin-bottom: 0.25rem !important; }
-          .login-subtitle { margin-top: 0.25rem !important; font-size: 0.7rem !important; }
-          .login-header-group { margin-bottom: 1rem !important; }
-          form { gap: 0.75rem !important; }
-          input { padding: 0.75rem 1rem !important; }
-          button[id="login-submit"] { padding: 0.75rem !important; margin-top: 0 !important; }
+          .login-h2 { font-size: 1.15rem !important; margin-bottom: 0 !important; }
+          .login-subtitle { margin-top: 0.25rem !important; margin-bottom: 0.5rem !important; font-size: 0.7rem !important; }
+          .login-header-group { margin-bottom: 0.5rem !important; }
+          form { gap: 0.5rem !important; }
+          input { padding: 0.6rem 1rem !important; height: 40px !important; font-size: 0.9rem !important; }
+          button[id="login-submit"] { padding: 0.6rem !important; margin-top: 0 !important; height: 40px !important; }
+          p[style*="marginTop: '2rem'"] { margin-top: 0.75rem !important; font-size: 0.65rem !important; }
         }
         
         /* Tablet Landscape & Short Desktop Compression */
         @media (min-width: 769px) and (max-height: 900px) {
           .branding-panel, .form-panel { padding: 1.5rem 2rem !important; }
-          .logo-container { margin-bottom: 1.25rem !important; }
-          .login-header-group { margin-bottom: 1.25rem !important; }
-          .branding-p { margin-bottom: 1.25rem !important; }
+          .logo-container { margin-bottom: 1rem !important; padding: 16px !important; }
+          .branding-img { width: 140px !important; }
+          .login-header-group { margin-bottom: 1rem !important; }
+          .branding-p { margin-bottom: 1rem !important; display: none !important; }
           .login-subtitle { margin-top: 0.25rem !important; }
+          form { gap: 0.75rem !important; }
+          p[style*="marginTop: '2rem'"] { margin-top: 0.75rem !important; }
         }
       `}</style>
     </div>
