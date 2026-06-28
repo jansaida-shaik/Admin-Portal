@@ -23,7 +23,7 @@ export default function FileUpload({ value = '', onChange, label = 'Files / Docu
 
     try {
       // Reusing default fetch for multipart form since JSON content-type breaks boundary headers
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:5001/api');
       const res = await fetch(`${apiUrl}/upload`, {
         method: 'POST',
         headers: {
