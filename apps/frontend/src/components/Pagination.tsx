@@ -14,27 +14,47 @@ export default function Pagination({ page, limit, totalPages, total, setPage, se
   const end = Math.min(page * limit, total);
 
   const paginationContent = (
-    <div className="pagination-shell" style={{
-      width: '100%',
-      minHeight: '60px',
-      background: 'var(--bg-pagination-transparent, rgba(10, 15, 26, 0.55))',
-      borderTop: '1px solid var(--border-main)',
-      backdropFilter: 'blur(24px)',
-      WebkitBackdropFilter: 'blur(24px)',
-      boxShadow: '0 -4px 24px rgba(0, 0, 0, 0.15)',
-      padding: '12px 40px',
-      boxSizing: 'border-box',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      gap: '12px',
-      flexWrap: 'wrap',
-      fontSize: '13px',
-      color: 'var(--text-head)',
-    }}>
-      {/* Left: Per-page + count */}
-      <div className="pagination-meta" style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-        <span style={{ fontWeight: 600, color: 'var(--text-sub)', fontSize: '12px' }}>Show per page:</span>
+    <>
+      <style>{`
+        .pagination-shell {
+          flex-wrap: nowrap !important;
+          overflow-x: auto !important;
+          padding: 12px 16px !important;
+          -webkit-overflow-scrolling: touch;
+        }
+        .pagination-shell::-webkit-scrollbar {
+          display: none;
+        }
+        .pagination-meta, .pagination-actions {
+          flex-wrap: nowrap !important;
+          white-space: nowrap !important;
+          flex-shrink: 0;
+        }
+        @media (min-width: 768px) {
+          .pagination-shell {
+            padding: 12px 40px !important;
+          }
+        }
+      `}</style>
+      <div className="pagination-shell" style={{
+        width: '100%',
+        minHeight: '60px',
+        background: 'var(--bg-pagination-transparent, rgba(10, 15, 26, 0.55))',
+        borderTop: '1px solid var(--border-main)',
+        backdropFilter: 'blur(24px)',
+        WebkitBackdropFilter: 'blur(24px)',
+        boxShadow: '0 -4px 24px rgba(0, 0, 0, 0.15)',
+        boxSizing: 'border-box',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: '16px',
+        fontSize: '13px',
+        color: 'var(--text-head)',
+      }}>
+        {/* Left: Per-page + count */}
+        <div className="pagination-meta" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <span style={{ fontWeight: 600, color: 'var(--text-sub)', fontSize: '12px' }}>Show per page:</span>
         <select
           value={limit}
           onChange={(e) => { setLimit(Number(e.target.value)); setPage(1); }}
@@ -123,6 +143,7 @@ export default function Pagination({ page, limit, totalPages, total, setPage, se
         </button>
       </div>
     </div>
+    </>
   );
 
   if (!portalRoot) return null;
