@@ -127,7 +127,7 @@ export default function LoginPage() {
           marginBottom: '0.75rem',
           textAlign: 'center',
         }}>
-          Inventory Portal
+          Admin Portal
         </h1>
 
         <p className="branding-p" style={{
