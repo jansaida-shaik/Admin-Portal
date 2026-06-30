@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { fetchApi } from '@/lib/api';
+import { Save, X, Building2, User, Phone, Mail, MapPin } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function NewEmployeePage() {
   const router = useRouter();
@@ -16,12 +18,31 @@ export default function NewEmployeePage() {
     email: '',
     phone: '',
     role: 'STAFF',
-    branch: '',
-    city: ''
+    locationId: ''
   });
+
+  const [locations, setLocations] = useState([]);
+  const [selectedCity, setSelectedCity] = useState('');
+
+  useEffect(() => {
+    async function loadLocations() {
+      try {
+        const res = await fetchApi('/locations?limit=100');
+        setLocations(res.data || res || []);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    loadLocations();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleCityChange = (e) => {
+    setSelectedCity(e.target.value);
+    setFormData({ ...formData, locationId: '' });
   };
 
   const handleSubmit = async (e) => {
@@ -48,16 +69,18 @@ export default function NewEmployeePage() {
         })
       });
 
-      setSuccessMsg('Employee registered successfully!');
-      setTimeout(() => {
-        router.push('/employees');
-      }, 1500);
-    } catch (err) {
+      toast.success('Employee created successfully!');
+      router.push('/employees');
+    } catch (err: any) {
+      toast.error('Failed to create employee: ' + err.message);
       setErrorMsg(err.message || 'Failed to register employee');
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const cities = Array.from(new Set(locations.map((l: any) => l.city).filter(Boolean)));
+  const filteredBranches = locations.filter((l: any) => l.city === selectedCity);
 
   return (
     <div style={{ padding: '24px', maxWidth: '800px', margin: '0 auto' }}>
@@ -93,7 +116,7 @@ export default function NewEmployeePage() {
         )}
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          
+
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
             {/* Name */}
             <div>
@@ -142,24 +165,34 @@ export default function NewEmployeePage() {
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
-            {/* Branch */}
+            {/* City Selection */}
             <div>
               <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--text-sub)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>
-                Branch / Department
+                City
               </label>
-              <input type="text" name="branch" value={formData.branch} onChange={handleChange} placeholder="e.g. Sales, Technical, Operations" style={{
+              <select name="city" value={selectedCity} onChange={handleCityChange} style={{
                 width: '100%', padding: '12px 16px', background: 'var(--bg-input)', border: '1px solid var(--border-main)', borderRadius: '12px', color: 'var(--text-head)', fontSize: '14px', outline: 'none', boxSizing: 'border-box'
-              }} />
+              }}>
+                <option value="">Select a city...</option>
+                {cities.map((city: any) => (
+                  <option key={city} value={city}>{city}</option>
+                ))}
+              </select>
             </div>
 
-            {/* City */}
+            {/* Branch Selection */}
             <div>
               <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--text-sub)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>
-                Location / City
+                Branch
               </label>
-              <input type="text" name="city" value={formData.city} onChange={handleChange} placeholder="e.g. Vijayawada, Hyderabad" style={{
-                width: '100%', padding: '12px 16px', background: 'var(--bg-input)', border: '1px solid var(--border-main)', borderRadius: '12px', color: 'var(--text-head)', fontSize: '14px', outline: 'none', boxSizing: 'border-box'
-              }} />
+              <select name="locationId" value={formData.locationId} onChange={handleChange} disabled={!selectedCity} style={{
+                width: '100%', padding: '12px 16px', background: 'var(--bg-input)', border: '1px solid var(--border-main)', borderRadius: '12px', color: 'var(--text-head)', fontSize: '14px', outline: 'none', boxSizing: 'border-box', opacity: !selectedCity ? 0.5 : 1
+              }}>
+                <option value="">Select a branch...</option>
+                {filteredBranches.map((loc: any) => (
+                  <option key={loc.id} value={loc.id}>{loc.name}</option>
+                ))}
+              </select>
             </div>
           </div>
 

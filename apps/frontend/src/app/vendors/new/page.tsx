@@ -35,7 +35,7 @@ export default function NewVendorPage() {
       setSuccessMsg('Vendor enrolled successfully!');
       setTimeout(() => {
         router.push('/vendors');
-      }, 1500);
+      }, 300);
     } catch (err) {
       setErrorMsg(err.message || 'Failed to enroll vendor');
     } finally {

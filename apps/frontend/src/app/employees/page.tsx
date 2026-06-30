@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { fetchApi } from '@/lib/api';
 import Pagination from '@/components/Pagination';
 import dynamic from 'next/dynamic';
+import ExportButton from '@/components/ExportButton';
 import { CITY_FILTER_OPTIONS } from '@/lib/locations';
 
 const SearchableSelect = dynamic(() => import('@/components/SearchableSelect'), {
@@ -67,8 +68,8 @@ export default function Directory() {
         allUsers.forEach(u => {
           if (u.role === 'ADMIN') adminCount++;
           assignmentSum += (u._count?.assignments || 0) + (u._count?.mobileNumbers || 0);
-          if (u.city) uniqueLocs.add(u.city);
-          else if (u.loc) uniqueLocs.add(u.loc);
+          if (u.location?.city) uniqueLocs.add(u.location.city);
+          else if (u.city) uniqueLocs.add(u.city);
         });
 
         setAggStats({
@@ -88,8 +89,8 @@ export default function Directory() {
     const matchesSearch = e.name.toLowerCase().includes(search.toLowerCase()) || 
                           e.email.toLowerCase().includes(search.toLowerCase());
     const matchesRole = roleFilter === 'ALL' || e.role === roleFilter;
-    const matchesCity = cityFilter === 'ALL' || e.city === cityFilter || e.loc === cityFilter;
-    const matchesBranch = branchFilter === 'ALL' || e.branch === branchFilter || e.location === branchFilter;
+    const matchesCity = cityFilter === 'ALL' || (e.location?.city === cityFilter) || (e.city === cityFilter);
+    const matchesBranch = branchFilter === 'ALL' || (e.location?.name === branchFilter) || (e.branch === branchFilter);
     return matchesSearch && matchesRole && matchesCity && matchesBranch;
   }).sort((a, b) => {
     const countA = (a._count?.assignments || 0) + (a._count?.mobileNumbers || 0);
@@ -124,31 +125,27 @@ export default function Directory() {
           }}>Employee Directory</h1>
           <p style={{ fontSize: '14px', color: 'var(--text-sub)', marginTop: '4px' }}>Resource accountability registry.</p>
         </div>
-        <Link href="/employees/new" 
-          style={{
-            background: 'linear-gradient(135deg, #F58220, #245fb4)',
-            color: '#fff',
-            padding: '10px 18px',
-            borderRadius: '14px',
-            fontWeight: 600,
-            fontSize: '13px',
-            textDecoration: 'none',
-            boxShadow: '0 4px 12px rgba(255, 90, 31, 0.2)',
-            transition: 'all 0.3s ease',
-            display: 'inline-flex',
-            alignItems: 'center',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-1px)';
-            e.currentTarget.style.boxShadow = '0 8px 20px rgba(255, 90, 31, 0.35)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 90, 31, 0.2)';
-          }}
-        >
-          + Add Employee
-        </Link>
+        
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <ExportButton 
+            data={filtered} 
+            filename="Employees_Report" 
+            headers={[
+              { key: 'name', label: 'Name' },
+              { key: 'department', label: 'Department' },
+              { key: 'role', label: 'Role' },
+              { key: 'branch', label: 'Branch' },
+              { key: 'email', label: 'Email' }
+            ]} 
+          />
+          <Link href="/employees/new" style={{
+            background: 'linear-gradient(135deg, #F58220, #245fb4)', color: '#fff', padding: '10px 18px',
+            borderRadius: '14px', fontWeight: 600, fontSize: '13px', textDecoration: 'none',
+            boxShadow: '0 4px 12px rgba(255, 90, 31, 0.2)', transition: 'all 0.3s ease', display: 'inline-flex', alignItems: 'center'
+          }}>
+            + Add Employee
+          </Link>
+        </div>
       </div>
 
       {/* 📊 Personnel & Employee Custody Analytics Row */}

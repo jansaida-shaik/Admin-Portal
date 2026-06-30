@@ -14,9 +14,10 @@ model User {
   role      Role     @default(STAFF)
   
   // Extensible user profiles
-  city      String?  // Primary Location
-  branch    String?  // Primary Branch
   phone     String?  // Contact Line
+  department String? @default("GENERAL")
+  locationId BigInt?
+  location   Location? @relation("UserLocation", fields: [locationId], references: [id])
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -28,10 +29,21 @@ model User {
   mobileNumbers     MobileNumber[]
   mobileAssignments MobileAssignment[]
   serviceRequests   ServiceRequest[]
+  salaries          Salary[]
+  attendances       Attendance[]
+  leaves            Leave[]
+  leaveQuota        LeaveQuota?
+  dailyChecklists   DailyChecklist[]
+  weeklyChecklists  WeeklyChecklist[]
+  monthlyChecklists MonthlyChecklist[]
+  payrolls          Payroll[]
+  dutyAllocations   DutyAllocation[]
+  lostDamagedDevices LostDamagedDevice[]
 }
 
 enum Role {
   ADMIN
+  MANAGER
   STAFF
 }
 
@@ -58,14 +70,21 @@ model Location {
   id        BigInt   @id @default(autoincrement())
   name      String
   city      String?
+  isMaster  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  users            User[]   @relation("UserLocation")
 
   stocks           Stock[]
   transactionsFrom Transaction[] @relation("FromLocation")
   transactionsTo   Transaction[] @relation("ToLocation")
   assignments      Assignment[]
   internetBills    InternetBill[]
+  lostDamagedDevices LostDamagedDevice[]
+  dutyAllocations  DutyAllocation[]
+  cleaningStocks   CleaningStock[]
+  subscriptions    Subscription[]
 }
 
 model Item {
@@ -85,6 +104,7 @@ model Item {
   assignments  Assignment[]
   repairs      RepairHistory[]
   serviceRequests ServiceRequest[]
+  lostDamagedDevices LostDamagedDevice[]
 }
 
 model Stock {
@@ -235,7 +255,9 @@ model ServiceRequest {
   id          BigInt   @id @default(autoincrement())
   title       String
   description String
+  priority    String   @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
   status      String   @default("PENDING") // PENDING, APPROVED, IN_PROGRESS, RESOLVED, REJECTED
+  slaDueDate  DateTime?
   userId      BigInt
   itemId      BigInt?
   createdAt   DateTime @default(now())
@@ -271,4 +293,232 @@ model PlacementOrder {
   status      String   @default("PENDING") // PENDING, FULFILLED, REJECTED
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Salary {
+  id          BigInt   @id @default(autoincrement())
+  userId      BigInt
+  amount      Float
+  effectiveDate DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model Attendance {
+  id          BigInt   @id @default(autoincrement())
+  userId      BigInt
+  date        DateTime @db.Date
+  checkIn     DateTime?
+  checkOut    DateTime?
+  status      String   @default("PRESENT") // PRESENT, ABSENT, HALF_DAY
+  
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, date])
+}
+
+model Leave {
+  id          BigInt   @id @default(autoincrement())
+  userId      BigInt
+  startDate   DateTime @db.Date
+  endDate     DateTime @db.Date
+  reason      String
+  leaveType   String   @default("CASUAL") // SICK, CASUAL, EARNED
+  status      String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model LeaveQuota {
+  id          BigInt   @id @default(autoincrement())
+  userId      BigInt   @unique
+  sickLeave   Int      @default(12)
+  casualLeave Int      @default(12)
+  earnedLeave Int      @default(0)
+  
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model DailyChecklist {
+  id          BigInt   @id @default(autoincrement())
+  userId      BigInt
+  date        DateTime @db.Date
+  task        String
+  isCompleted Boolean  @default(false)
+  photoUrl    String?  // Mandatory photo for proof
+  
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model WeeklyChecklist {
+  id          BigInt   @id @default(autoincrement())
+  userId      BigInt
+  weekStart   DateTime @db.Date
+  task        String
+  isCompleted Boolean  @default(false)
+  photoUrl    String?
+  
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model MonthlyChecklist {
+  id          BigInt   @id @default(autoincrement())
+  userId      BigInt
+  month       String   // e.g., '2026-06'
+  task        String
+  isCompleted Boolean  @default(false)
+  photoUrl    String?
+  
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model Payroll {
+  id            BigInt   @id @default(autoincrement())
+  userId        BigInt
+  month         String   // e.g. '2026-06'
+  basicSalary   Float
+  allowances    Float    @default(0)
+  deductions    Float    @default(0)
+  netPay        Float
+  status        String   @default("PENDING") // PENDING, PAID
+  paymentDate   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user          User     @relation(fields: [userId], references: [id])
+}
+
+model DutyAllocation {
+  id          BigInt   @id @default(autoincrement())
+  userId      BigInt
+  locationId  BigInt
+  shiftTime   String   // e.g., '09:00 AM - 06:00 PM'
+  assignedDate DateTime @db.Date
+  
+  user        User     @relation(fields: [userId], references: [id])
+  location    Location @relation(fields: [locationId], references: [id])
+}
+
+model Subscription {
+  id              BigInt   @id @default(autoincrement())
+  name            String
+  vendor          String
+  plan            String?
+  category        String?
+  licenseCount    Int?
+  cost            Float
+  billingFrequency String  // MONTHLY, QUARTERLY, HALF_YEARLY, YEARLY
+  purchaseDate    DateTime? @db.Date
+  renewalDate     DateTime @db.Date
+  autoRenew       Boolean  @default(false)
+  paymentMethod   String?
+  owner           String?
+  notes           String?
+  attachments     String?
+  status          String   @default("ACTIVE")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  locationId      BigInt?
+  location        Location? @relation(fields: [locationId], references: [id])
+}
+
+model LostDamagedDevice {
+  id              BigInt   @id @default(autoincrement())
+  itemId          BigInt
+  userId          BigInt?
+  locationId      BigInt?
+  status          String   // LOST, DAMAGED, STOLEN, UNDER_REPAIR, RECOVERED
+  incidentDate    DateTime @db.Date
+  description     String
+  attachments     String?
+  insuranceDetails String?
+  recoveryStatus  String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  item            Item     @relation(fields: [itemId], references: [id])
+  user            User?    @relation(fields: [userId], references: [id])
+  location        Location? @relation(fields: [locationId], references: [id])
+}
+
+model EmailTemplate {
+  id              BigInt   @id @default(autoincrement())
+  name            String   @unique
+  subject         String
+  body            String
+  category        String?
+  variables       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  reminders       ReminderSchedule[]
+}
+
+model Webhook {
+  id              BigInt   @id @default(autoincrement())
+  name            String
+  url             String
+  method          String   @default("POST")
+  headers         String?
+  events          String?  // JSON array of events
+  payloadTemplate String?
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model ReminderSchedule {
+  id              BigInt   @id @default(autoincrement())
+  name            String
+  module          String   // SUBSCRIPTIONS, ASSETS, etc.
+  referenceId     BigInt?  // ID of the record
+  reminderDate    DateTime @db.Date
+  recipients      String   // JSON array of emails
+  templateId      BigInt?
+  status          String   @default("PENDING") // PENDING, SENT, FAILED
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  template        EmailTemplate? @relation(fields: [templateId], references: [id])
+}
+
+// ─── HOUSEKEEPING INVENTORY ──────────────────────────────────────────────
+
+model CleaningItem {
+  id          BigInt   @id @default(autoincrement())
+  name        String
+  description String?
+  unit        String   @default("pcs")
+  createdAt   DateTime @default(now())
+  
+  stocks      CleaningStock[]
+}
+
+model CleaningStock {
+  id          BigInt   @id @default(autoincrement())
+  itemId      BigInt
+  locationId  BigInt
+  quantity    Int      @default(0)
+  minStock    Int      @default(10)
+  lastRestock DateTime @default(now())
+
+  item        CleaningItem @relation(fields: [itemId], references: [id])
+  location    Location     @relation(fields: [locationId], references: [id])
+
+  @@unique([itemId, locationId])
+}
+
+// ─── AUDIT LOGS ──────────────────────────────────────────────
+
+model VendorMergeLog {
+  id              BigInt   @id @default(autoincrement())
+  primaryVendorId BigInt
+  mergedVendorId  BigInt
+  mergedVendorName String
+  mergedByUserId  BigInt
+  mergedAt        DateTime @default(now())
+  details         String?
 }

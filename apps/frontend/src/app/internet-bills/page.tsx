@@ -611,6 +611,7 @@ export default function InternetBills() {
                   >
                     <option value="MONTHLY">Monthly Billing</option>
                     <option value="QUARTERLY">Quarterly Billing</option>
+                    <option value="HALF_YEARLY">Half-Yearly Billing</option>
                     <option value="YEARLY">Yearly Billing</option>
                   </select>
                 </div>

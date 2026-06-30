@@ -49,7 +49,7 @@ export default function NewInternetConnectionPage() {
       setSuccessMsg('Internet connection added successfully!');
       setTimeout(() => {
         router.push('/internet-bills');
-      }, 1500);
+      }, 300);
     } catch (err) {
       setErrorMsg(err.message || 'Failed to add connection');
     } finally {

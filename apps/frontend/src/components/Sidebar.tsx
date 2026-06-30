@@ -61,6 +61,24 @@ const Icons = {
       <path strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
     </svg>
   ),
+  Reports: () => (
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ width: '24px', height: '24px' }}>
+      <path d="M9 17v-6M12 17v-3M15 17v-8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M4 19.5A2.5 2.5 0 016.5 17h11A2.5 2.5 0 0120 19.5V21H4v-1.5zM4 7a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V7z" fill="currentColor" fillOpacity="0.25" strokeWidth="0" />
+      <path strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" d="M4 7a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V7z" />
+    </svg>
+  ),
+  Users: () => (
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ width: '24px', height: '24px' }}>
+      <path strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+    </svg>
+  ),
+  Settings: () => (
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ width: '24px', height: '24px' }}>
+      <path strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+      <path strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  )
 };
 
 export default function Sidebar({ isOpen, onToggle, isMobile = false, onClose }) {
@@ -72,12 +90,16 @@ export default function Sidebar({ isOpen, onToggle, isMobile = false, onClose })
     { n: 'Dashboard', p: '/', i: Icons.Dashboard },
     { n: 'System Telemetry', p: '/analytics', i: Icons.Analytics },
     { n: 'Directory', p: '/assets', i: Icons.Directory },
+    { n: 'Lost & Damaged', p: '/assets/lost-devices', i: Icons.Audit },
     { n: 'Vendors', p: '/vendors', i: Icons.Vendors },
     { n: 'Employees', p: '/employees', i: Icons.Employees },
+    { n: 'Access & Identity', p: '/users', i: Icons.Users },
+    { n: 'Reports', p: '/reports', i: Icons.Reports },
     { n: 'Mobile Numbers', p: '/mobile-numbers', i: Icons.Mobile },
     { n: 'Internet Bills', p: '/internet-bills', i: Icons.Dollar },
     { n: 'Stock Movement', p: '/assets/new', i: Icons.Stock },
-    { n: 'Audit Log', p: '/transactions', i: Icons.Audit },
+    { n: 'Subscriptions', p: '/subscriptions', i: Icons.Dollar },
+    { n: 'Housekeeping', p: '/housekeeping', i: Icons.Employees },
   ];
 
   return (

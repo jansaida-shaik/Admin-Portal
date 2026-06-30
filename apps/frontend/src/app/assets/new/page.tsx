@@ -128,7 +128,7 @@ export default function StockMovement() {
       setSuccessMsg(`Successfully processed ${movementType} transaction for ${formData.quantity} unit(s)!`);
       setTimeout(() => {
         router.push('/assets'); // Automatically route back to directory
-      }, 1500);
+      }, 300);
 
     } catch (err) {
       setErrorMsg(err.message || 'Logistics vector failed to commit transaction stream.');

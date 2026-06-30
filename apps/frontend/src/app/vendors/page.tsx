@@ -6,6 +6,7 @@ import { usePaginatedData } from '@/lib/usePaginatedData';
 import Pagination from '@/components/Pagination';
 import dynamic from 'next/dynamic';
 import { CITY_FILTER_OPTIONS, CITY_COLOR } from '@/lib/locations';
+import ExportButton from '@/components/ExportButton';
 
 const SearchableSelect = dynamic(() => import('@/components/SearchableSelect'), {
   loading: () => <div style={{ height: '42px', width: '100%', background: 'var(--bg-input)', borderRadius: '12px', animation: 'pulse 1.5s infinite' }} />
@@ -79,29 +80,26 @@ export default function VendorsDirectory() {
           }}>Vendor Network</h1>
           <p style={{ fontSize: '14px', color: 'var(--text-sub)', marginTop: '4px' }}>Verified logistics, procurement, and maintenance hubs.</p>
         </div>
-        <button style={{
-          background: 'linear-gradient(135deg, #F58220, #245fb4)',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '14px',
-          padding: '10px 18px',
-          fontWeight: 600,
-          fontSize: '13px',
-          cursor: 'pointer',
-          boxShadow: '0 4px 12px rgba(255, 90, 31, 0.2)',
-          transition: 'all 0.3s ease',
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'translateY(-1px)';
-          e.currentTarget.style.boxShadow = '0 8px 20px rgba(255, 90, 31, 0.35)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'translateY(0)';
-          e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 90, 31, 0.2)';
-        }}
-        >
-          + Enroll Vendor
-        </button>
+        
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <ExportButton 
+            data={filtered} 
+            filename="Vendors_Report" 
+            headers={[
+              { key: 'name', label: 'Name' },
+              { key: 'category', label: 'Category' },
+              { key: 'location.name', label: 'Branch' },
+              { key: 'status', label: 'Status' }
+            ]} 
+          />
+          <Link href="/vendors/new" style={{
+            background: 'linear-gradient(135deg, #F58220, #245fb4)', color: '#fff', padding: '10px 18px',
+            borderRadius: '14px', fontWeight: 600, fontSize: '13px', textDecoration: 'none',
+            boxShadow: '0 4px 12px rgba(255, 90, 31, 0.2)', transition: 'all 0.3s ease', display: 'inline-flex', alignItems: 'center'
+          }}>
+            + Add Vendor
+          </Link>
+        </div>
       </div>
 
       {/* 📊 Supply Chain & Vendor Analytics Dashboard */}

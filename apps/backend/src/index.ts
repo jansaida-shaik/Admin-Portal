@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-dotenv.config();
+dotenv.config({ path: require('path').join(__dirname, '../.env') });
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -61,7 +61,24 @@ app.set('json replacer', (key, value) => typeof value === 'bigint' ? value.toStr
 // ─── Modules & Middleware ────────────────────────────────────────────────
 import authenticate from './middleware/auth.middleware';
 import authRoutes from './modules/auth/auth.routes';
+import housekeepingRoutes from './modules/housekeeping/housekeeping.routes';
+import reportsRoutes from './modules/reports/reports.routes';
+import usersRoutes from './modules/users/users.routes';
+import webhooksRoutes from './modules/webhooks/webhooks.routes';
+import { appendRowToSheet } from './utils/googleSheets';
+import { z } from 'zod';
+
 app.use('/api/auth', authRoutes);
+app.use('/api/housekeeping', housekeepingRoutes);
+app.use('/api/reports', reportsRoutes);
+app.use('/api/users', usersRoutes);
+app.use('/api/webhooks', webhooksRoutes);
+
+import subscriptionsRoutes from './modules/subscriptions/subscriptions.routes';
+app.use('/api/subscriptions', subscriptionsRoutes);
+
+import lostDevicesRoutes from './modules/lost-devices/lost-devices.routes';
+app.use('/api/lost-devices', lostDevicesRoutes);
 
 // ─── Dashboard Stats ───────────────────────────────────────────────────────
 app.get('/api/stats', authenticate, asyncHandler(async (req: any, res: any) => {
@@ -291,125 +308,6 @@ app.post('/api/locations', authenticate, asyncHandler(async (req: any, res: any)
 }));
 
 // ─── Users / Employees ─────────────────────────────────────────────────────
-app.get('/api/users', authenticate, asyncHandler(async (req: any, res: any) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 25;
-  const skip = (page - 1) * limit;
-  const search = req.query.search;
-  const nameExact = req.query.nameExact;
-
-  const where: any = {};
-  if (nameExact) {
-    where.name = { equals: nameExact, mode: 'insensitive' };
-  } else if (search) {
-    where.OR = [
-      { name: { contains: search, mode: 'insensitive' } },
-      { email: { contains: search, mode: 'insensitive' } },
-    ];
-  }
-
-  const [data, total] = await Promise.all([prisma.user.findMany({
-    where,
-    skip,
-    take: limit,
-    include: {
-      _count: {
-        select: {
-          assignments: {
-            where: {
-              status: 'ACTIVE'
-            }
-          },
-          mobileNumbers: true
-        }
-      }
-    },
-    orderBy: {
-      name: 'asc'
-    }
-  }), prisma.user.count({ where })]);
-  res.json({
-    data,
-    total,
-    page,
-    limit,
-    totalPages: Math.ceil(total / limit)
-  });
-}));
-app.get('/api/users/:id', authenticate, asyncHandler(async (req: any, res: any) => {
-  const user = await prisma.user.findUnique({
-    where: {
-      id: BigInt(req.params.id)
-    },
-    include: {
-      assignments: {
-        where: {
-          status: 'ACTIVE'
-        },
-        include: {
-          item: {
-            include: {
-              category: true
-            }
-          },
-          location: true
-        }
-      },
-      mobileNumbers: true
-    }
-  });
-  if (!user) return res.status(404).json({
-    error: 'User not found'
-  });
-  res.json(user);
-}));
-app.post('/api/users', authenticate, asyncHandler(async (req: any, res: any) => {
-  const {
-    name,
-    email,
-    password,
-    role,
-    city,
-    branch,
-    phone
-  } = req.body;
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-      password,
-      role: role || 'STAFF',
-      city,
-      branch,
-      phone
-    }
-  });
-  res.status(201).json(user);
-}));
-app.put('/api/users/:id', authenticate, asyncHandler(async (req: any, res: any) => {
-  const {
-    name,
-    email,
-    role,
-    city,
-    branch,
-    phone
-  } = req.body;
-  const user = await prisma.user.update({
-    where: {
-      id: BigInt(req.params.id)
-    },
-    data: {
-      name,
-      email,
-      role,
-      city,
-      branch,
-      phone
-    }
-  });
-  res.json(user);
-}));
 
 // ─── Stock ─────────────────────────────────────────────────────────────────
 app.get('/api/stocks', authenticate, asyncHandler(async (req: any, res: any) => {
@@ -1046,6 +944,7 @@ app.get('/api/me', authenticate, asyncHandler(async (req: any, res: any) => {
       id: BigInt(req.user.id)
     },
     include: {
+      location: true,
       assignments: {
         where: {
           status: 'ACTIVE'
@@ -1074,8 +973,7 @@ app.put('/api/me', authenticate, asyncHandler(async (req: any, res: any) => {
     email,
     password,
     phone,
-    city,
-    branch
+    locationId
   } = req.body;
   const user = await prisma.user.update({
     where: {
@@ -1086,8 +984,7 @@ app.put('/api/me', authenticate, asyncHandler(async (req: any, res: any) => {
       email,
       password,
       phone,
-      city,
-      branch
+      locationId: locationId ? BigInt(locationId) : null
     }
   });
   res.json(user);
@@ -1136,6 +1033,13 @@ app.post('/api/service-requests', authenticate, asyncHandler(async (req: any, re
       user: true
     }
   });
+
+  // GOOGLE SHEETS SYNC (Automation Engine)
+  const sheetId = process.env.GOOGLE_SHEET_ID || 'mock_sheet_id';
+  await appendRowToSheet(sheetId, 'ServiceRequests!A:E', [
+    [reqObj.id.toString(), reqObj.title, reqObj.status, reqObj.createdAt.toISOString(), reqObj.user?.name || 'System']
+  ]);
+
   res.status(201).json(reqObj);
 }));
 app.put('/api/service-requests/:id', authenticate, asyncHandler(async (req: any, res: any) => {

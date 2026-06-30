@@ -121,9 +121,9 @@ export default function EmployeeAssets({ params }) {
               );
             })()}
             <span style={{opacity:0.4}}>•</span>
-            <span>📍 <strong style={{color:'var(--text-head)'}}>Location:</strong> {employee.city || employee.loc || 'Global'}</span>
+            <span>📍 <strong style={{color:'var(--text-head)'}}>Location:</strong> {employee.location?.city || employee.city || 'Global'}</span>
             <span style={{opacity:0.4}}>•</span>
-            <span><strong style={{color:'var(--text-head)'}}>Branch:</strong> {employee.branch || employee.location || 'Main Office'}</span>
+            <span><strong style={{color:'var(--text-head)'}}>Branch:</strong> {employee.location?.name || employee.branch || 'Main Office'}</span>
           </div>
         </div>
       </div>

@@ -12,7 +12,16 @@ export function usePaginatedData(endpoint, dependencies = []) {
   const [totalPages, setTotalPages] = useState(1);
   
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const dependencyKey = JSON.stringify(dependencies);
+
+  // Debounce search to prevent UI stutter and excessive API calls
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [search]);
 
   useEffect(() => {
     async function loadData() {
@@ -21,7 +30,7 @@ export function usePaginatedData(endpoint, dependencies = []) {
         const queryParams = new URLSearchParams({
           page: page.toString(),
           limit: limit.toString(),
-          ...(search ? { search } : {})
+          ...(debouncedSearch ? { search: debouncedSearch } : {})
         });
         const result = await fetchApi(`${endpoint}?${queryParams.toString()}`);
         setData(result.data || []);
@@ -35,7 +44,7 @@ export function usePaginatedData(endpoint, dependencies = []) {
       }
     }
     loadData();
-  }, [endpoint, page, limit, search, dependencyKey]);
+  }, [endpoint, page, limit, debouncedSearch, dependencyKey]);
 
   return {
     data,

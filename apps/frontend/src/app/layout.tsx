@@ -1,9 +1,10 @@
 import './globals.css';
 import ClientLayout from '@/components/ClientLayout';
 import { ThemeProvider } from '@/context/ThemeContext';
+import { Toaster } from 'react-hot-toast';
 
 export const metadata = {
-  title: 'Codegnan Inventory Portal',
+  title: 'Codegnan Admin Portal',
   description: 'Premium-grade inventory management portal for Codegnan.',
 };
 
@@ -17,6 +18,8 @@ export default function RootLayout({ children }) {
           <div className="absolute bottom-[-15%] right-[-10%] w-[60%] h-[60%] rounded-full bg-emerald-400/15 blur-[160px]" />
           <div className="absolute top-[30%] right-[10%] w-[40%] h-[40%] rounded-full bg-orange-300/10 blur-[120px]" />
         </div>
+
+        <Toaster position="top-right" />
 
         <div className="flex-1 flex flex-col">
           <ThemeProvider>

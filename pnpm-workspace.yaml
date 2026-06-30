@@ -2,6 +2,7 @@ packages:
   - 'apps/*'
 allowBuilds:
   '@prisma/engines': false
+  core-js: set this to true or false
   prisma: false
   sharp: false
   unrs-resolver: false

@@ -6,18 +6,13 @@ export function useAuth() {
   const [status, setStatus] = useState('loading');
 
   useEffect(() => {
-    const timer = window.setTimeout(() => {
-      const user = localStorage.getItem('user');
-      if (user) {
-        setSession({ user: JSON.parse(user) });
-        setStatus('authenticated');
-        return;
-      }
-
+    const user = localStorage.getItem('user');
+    if (user) {
+      setSession({ user: JSON.parse(user) });
+      setStatus('authenticated');
+    } else {
       setStatus('unauthenticated');
-    }, 0);
-
-    return () => window.clearTimeout(timer);
+    }
   }, []);
 
   const login = (userData, token) => {
