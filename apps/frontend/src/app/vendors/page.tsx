@@ -7,6 +7,7 @@ import Pagination from '@/components/Pagination';
 import dynamic from 'next/dynamic';
 import { CITY_FILTER_OPTIONS, CITY_COLOR } from '@/lib/locations';
 import ExportButton from '@/components/ExportButton';
+import ImportButton from '@/components/ImportButton';
 
 const SearchableSelect = dynamic(() => import('@/components/SearchableSelect'), {
   loading: () => <div style={{ height: '42px', width: '100%', background: 'var(--bg-input)', borderRadius: '12px', animation: 'pulse 1.5s infinite' }} />
@@ -82,11 +83,16 @@ export default function VendorsDirectory() {
         </div>
         
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <ImportButton 
+            moduleName="vendors" 
+            sampleData={[{ name: 'TechCorp', contact: '9876543210' }]}
+            onImportSuccess={() => window.location.reload()}
+          />
           <ExportButton 
-            data={filtered} 
-            filename="Vendors_Report" 
+            data={vendors} 
+            filename="vendors_report" 
             headers={[
-              { key: 'name', label: 'Name' },
+              { key: 'name', label: 'Vendor Name' },
               { key: 'category', label: 'Category' },
               { key: 'location.name', label: 'Branch' },
               { key: 'status', label: 'Status' }

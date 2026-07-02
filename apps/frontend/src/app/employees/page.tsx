@@ -5,6 +5,7 @@ import { fetchApi } from '@/lib/api';
 import Pagination from '@/components/Pagination';
 import dynamic from 'next/dynamic';
 import ExportButton from '@/components/ExportButton';
+import ImportButton from '@/components/ImportButton';
 import { CITY_FILTER_OPTIONS } from '@/lib/locations';
 
 const SearchableSelect = dynamic(() => import('@/components/SearchableSelect'), {
@@ -127,6 +128,11 @@ export default function Directory() {
         </div>
         
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <ImportButton 
+            moduleName="users" 
+            sampleData={[{ name: 'John Doe', email: 'john@example.com', role: 'STAFF', department: 'SALES' }]}
+            onImportSuccess={() => window.location.reload()}
+          />
           <ExportButton 
             data={filtered} 
             filename="Employees_Report" 

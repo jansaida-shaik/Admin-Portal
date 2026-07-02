@@ -65,6 +65,7 @@ import housekeepingRoutes from './modules/housekeeping/housekeeping.routes';
 import reportsRoutes from './modules/reports/reports.routes';
 import usersRoutes from './modules/users/users.routes';
 import webhooksRoutes from './modules/webhooks/webhooks.routes';
+import importRoutes from './modules/import/import.routes';
 import { appendRowToSheet } from './utils/googleSheets';
 import { z } from 'zod';
 
@@ -73,6 +74,7 @@ app.use('/api/housekeeping', housekeepingRoutes);
 app.use('/api/reports', reportsRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/webhooks', webhooksRoutes);
+app.use('/api/import', importRoutes);
 
 import subscriptionsRoutes from './modules/subscriptions/subscriptions.routes';
 app.use('/api/subscriptions', subscriptionsRoutes);
